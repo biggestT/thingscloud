@@ -11,6 +11,8 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url( r'^search/', include( 'ajaxsearch.urls' )),
+    url( r'^users/', include( 'quickstartREST.urls' )),
+
 )
 
 # urlpatterns += patterns('',
