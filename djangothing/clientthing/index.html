@@ -1,0 +1,83 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="description" content="ThingsBook">
+	<meta name="keywords" content="thingsbook, things, sharing, social, environment">
+	<meta name="author" content="Emil Riseby, Tor Nilsson Öhrn">
+    <meta property="og:title" content="thingsbook" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="Thingsbook" />
+    <meta property="fb:admins" content="542090519" />
+    <title>ThingsBook</title>
+    <link type="text/css"href="css/thingsbook.css"  rel="stylesheet" >
+    <link type="text/css"href="css/bootstrap/bootstrap.min.css"  rel="stylesheet" >
+    <link type="text/css"href="css/bootstrap/bootstrap-responsive.min.css"  rel="stylesheet" >
+    <link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+    
+    <div id="greenBarHolder" class="slim">
+        <div id="greenBar">
+            <div id="pageHead">
+                <h1 id="pageLogo">
+                    <a href="">ThingsBook</a>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div id="globalContainer">
+        <div id="thingsbookApp"> 
+            <!-- Some content created by the JavaScript application -->
+            <section id="search">
+                <header id="searchBar">
+                    <h1>Search</h1>
+                    <input id="searchBar" class="search-query" placeholder="Which thing are you looking for?" autofocus>
+                </header>
+                <section id="searchResults">
+                    <!-- <input id="toggle-all" type="checkbox"> -->
+                    <!-- <label for="toggle-all">Mark all as complete</label> -->
+                    <ul id="resultList"></ul>
+                </section>
+                <footer id="footer"></footer>
+            </section>
+            <footer id="info">
+                <p>Thingsbook is currently under construction</p>
+                <p>Created by 
+                    <a href="http://tornilssonohrn.com">Tor</a>
+                    and
+                    <a href="http://riseby.tumblr.com/">Emil</a>
+                </p>
+            </footer>
+            <!-- Template for viewing a thing's thumbnail -->
+            <script type="text/template" id="thingThumb-template">
+                <div class="view">
+                    <img class="thumbnail profileLink" src="<%= photo %>"/>
+                    <ul>
+                        <li><%= tags %></li>
+                        <li><%= owner %></li>
+                    </ul>
+                </div>
+            </script>
+            <!-- Template for viewing some general statistics about Thingsbook-->
+            <script type="text/template" id="stats-template">
+                <span id="totalThings"><strong><%= totalThings %></strong> things in the database </span>
+            </script>   
+        </div>
+    </div>
+    <!-- Libraries that the applications depends on -->
+    <script type="text/javascript" src="js/lib/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/lib/underscore-min.js"></script>
+    <script type="text/javascript" src="js/lib/backbone-min.js"></script>
+    <script type="text/javascript" src="js/lib/backbone.localStorage-min.js"></script>
+    <!-- Application specific JavaScripts -->
+    <script src="js/models/thing.js"></script>
+    <script src="js/collections/things.js"></script>
+    <script src="js/views/searchBar.js"></script>
+    <script src="js/views/searchResults.js"></script>
+    <script src="js/views/thingThumb.js"></script>
+    <script src="js/views/app.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
