@@ -5,6 +5,7 @@ from things import views
 router = routers.DefaultRouter()
 router.register(r'thing', views.ThingViewSet)
 router.register(r'owner', views.OwnerViewSet)
+router.register(r'tag', views.TagViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browseable API.
