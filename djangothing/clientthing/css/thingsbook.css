@@ -27,6 +27,15 @@ h1, h2, h3, h4, h5, h6 {
 		color: #3b5998;
 		text-decoration: none;
 	}
+	.thumbnail {
+		width: 100px;
+	}
+	#searchBar {
+		padding: 10px;
+		margin: 10px 10%;
+		width: 300px;
+		outline: none;
+	}
 #pageLogo a, #pageLogo a:hover, #pageLogo a:focus, #pageLogo a:active {
 	background-image: url(../images/thingsBookLogo.png);
 	background-repeat: no-repeat;
@@ -44,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 	#pageHead, #greenBar #pageHead {
 		padding-top: 20px;
-		margin-left: 10%;
+		/*margin-left: 10%;*/
 		width: auto;
 		height: 40px;
 		/*position: relative;*/
@@ -66,15 +75,11 @@ padding-top: 20px;
 #greenBar {
 	background-color: #00BD06;
 	border-bottom: 1px solid #00B315;
-	min-width: auto;
+	/*min-width: auto;*/
 	position: relative;
 	z-index: 300;
 }
 
-	#pageHead {
-		margin: 0 auto;
-		width: 980px;
-	}
 
 		#pageLogo {
 			float: left;

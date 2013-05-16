@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 class Thing(models.Model):
-	title = models.CharField(max_length=30)
 	tag = models.ManyToManyField('Tag')
 	photo = models.CharField(max_length=50)
 	time = models.DateTimeField(auto_now_add=True)

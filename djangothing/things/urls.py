@@ -3,9 +3,9 @@ from rest_framework import routers
 from things import views
 
 router = routers.DefaultRouter()
-router.register(r'thing', views.ThingViewSet)
-router.register(r'owner', views.OwnerViewSet)
-router.register(r'tag', views.TagViewSet)
+router.register(r'owners', views.OwnersViewSet)
+router.register(r'tags', views.TagsViewSet)
+router.register(r'things', views.ThingsViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browseable API.

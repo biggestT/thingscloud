@@ -33,7 +33,8 @@ var app = app || {};
 		},
 		// initialize with collection of things
 		initialize: function () {
-			this.collection = new app.ThingsList(testResults);
+			this.collection = new app.ThingsList();
+			this.collection.fetch();
 			this.render();
 			console.log("created new collection of things");
 		},
