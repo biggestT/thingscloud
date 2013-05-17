@@ -106,6 +106,8 @@ REST_FRAMEWORK = {
     #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     # ]
 
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    # Ery AllowAny set to try api with client without log in.
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
     'PAGINATE_BY': 10
+
 }

@@ -1,5 +1,6 @@
-from things.models import Thing, Owner, Tag
+from things.models import Thing, Tag
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 class ThingSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -25,21 +26,10 @@ class ThingSerializer(serializers.HyperlinkedModelSerializer):
 			# Create new instance
 			return Thing(**attrs)
 
-class OwnerSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = Owner
-		fields = ('firstname', 'surname')
-
-		def restore_object(self, attrs, instance=None):
-		
-			if instance:
-			# Update existing instance
-				instance.firstname = attrs.get('firstname', instance.firstname)
-				instance.surname = attrs.get('surname', instance.surname)
-				return instance
-
-				# Create new instance
-			return Owner(**attrs)
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:

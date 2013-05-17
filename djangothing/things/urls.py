@@ -3,7 +3,7 @@ from rest_framework import routers
 from things import views
 
 router = routers.DefaultRouter()
-router.register(r'owners', views.OwnersViewSet)
+router.register(r'owners', views.UsersViewSet)
 router.register(r'tags', views.TagsViewSet)
 router.register(r'things', views.ThingsViewSet)
 
