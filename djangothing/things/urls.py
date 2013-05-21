@@ -11,5 +11,6 @@ router.register(r'things', views.ThingsViewSet)
 # Additionally, we include login URLs for the browseable API.
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
+    url(r'^search/(?P<searchtag>.+)/$', views.ThingsViewTagSearch.as_view()),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )

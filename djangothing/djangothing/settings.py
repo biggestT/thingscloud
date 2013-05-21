@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'corsheaders', # for testing on local server?
     'rest_framework',
-    'things'
+    'rest_framework.authtoken',
+    'things',
     # 'south',
 )
 
