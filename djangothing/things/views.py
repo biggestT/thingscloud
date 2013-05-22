@@ -1,4 +1,3 @@
-#import sys
 from things.models import Thing, Tag
 from django.contrib.auth.models import User
 from rest_framework import viewsets, generics
@@ -25,5 +24,4 @@ class ThingsViewTagSearch(generics.ListAPIView):
 
     def get_queryset(self):
     	searchtag = self.kwargs['searchtag']
-    	#print >>sys.stderr, searchtag
     	return Thing.objects.all().filter(tag__word=searchtag)
