@@ -9,7 +9,10 @@ var app = app || {};
 		// Reference to this collection's model.
 		// model: app.Thing,
 		url:  function(){
-    	return "http://127.0.0.1:8000/things/things/" + this.searchTerm + "?format=json";
+    	return "http://127.0.0.1:8000/things/search/" + this.searchTerm + "/?format=json";
+  	},
+  	parse: function (response) {
+  		return response.results;
   	}
  		// Save all of the resulting items under the "things" namespace.
 		// localStorage: new Backbone.LocalStorage('things-backbone')
@@ -19,7 +22,7 @@ var app = app || {};
 	    var results = new app.SearchResults();
 	    results.searchTerm = searchTerm;
 	    results.fetch({
-	      success: function(){
+	      success: function(collection, response){
 	        Backbone.trigger("search:results", results);
 	      },
 	      error: function(collection, response){

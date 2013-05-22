@@ -32,8 +32,8 @@ var app = app || {};
           return;
         }
         // Move below, just here while server side is set up for specific search queries
-				this.$input.val('');
         app.SearchResults.search(this.$input.val());
+				this.$input.val('');
 			}
   });
 // });
