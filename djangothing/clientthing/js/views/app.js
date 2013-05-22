@@ -20,6 +20,8 @@ var app = app || {};
 
 			new app.SearchResultsView();
 			new app.SearchBarView();
+			new app.FormAddThingView();
+
 			// this is where we will authenticate us as a valid app to the Thingsbook API
 			$.ajaxSetup({
 		    headers: {
