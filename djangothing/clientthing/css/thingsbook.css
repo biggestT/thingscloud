@@ -30,12 +30,20 @@ h1, h2, h3, h4, h5, h6 {
 	.thumbnail {
 		width: 100px;
 	}
-	#searchField {
-		padding: 10px;
-		margin: 10px 10%;
-		width: 300px;
-		outline: none;
+	/* SEARCH AREA */
+	#searchBar {
+
 	}
+		#searchField {
+			padding: 10px;
+			margin: 10px 10%;
+			width: 300px;
+			outline: none;
+		}
+		#logo {
+			/*float:left;*/
+			width: 20;
+		}
 #pageLogo a, #pageLogo a:hover, #pageLogo a:focus, #pageLogo a:active {
 	background-image: url(../images/thingsBookLogo.png);
 	background-repeat: no-repeat;
