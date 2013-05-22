@@ -1,4 +1,4 @@
-# import sys
+#import sys
 from things.models import Thing, Tag
 from django.contrib.auth.models import User
 from rest_framework import viewsets, generics
@@ -21,11 +21,9 @@ class ThingsList(generics.ListCreateAPIView):
     serializer_class = ThingSerializer
 
 class ThingsViewTagSearch(generics.ListAPIView):
-    # model = Thing
     serializer_class = ThingSerializer
-    # filter_class = ThingFilter
 
     def get_queryset(self):
     	searchtag = self.kwargs['searchtag']
-    	# print >>sys.stderr, searchtag
+    	#print >>sys.stderr, searchtag
     	return Thing.objects.all().filter(tag__word=searchtag)
