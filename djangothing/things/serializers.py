@@ -3,6 +3,9 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 class ThingSerializer(serializers.HyperlinkedModelSerializer):
+	# TODO: solve owner name
+	owner = serializers.RelatedField();
+	tag = serializers.PrimaryKeyRelatedField(many=True);
 	class Meta:
 		model = Thing
 		fields = ('tag', 'photo', 'time', 'owner')
