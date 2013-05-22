@@ -1,34 +1,40 @@
 /*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 
-(function () {
-	'use strict';
+// (function ($) {
+// 	'use strict';
   
 	//  View for the searchbar
 	// --------------
- 	app.SearchView = Backbone.View.extend({
+ 	app.SearchBarView = Backbone.View.extend({
+
+      el: $("#searchBar"),
+
+      // perform search when key is pressed while inside a searchfield
  			events: {
-          "keypress input[type=button]": "doSearchOnEnter"  
+          "keypress input[type=search]": "doSearchOnEnter"  
       },
 
       initialize: function(){
-      	this.$input = this.$('#searchBar');
+      	this.$input = this.$('#searchField');
+        console.log(this.$input);
         this.render();
       },
 
       render: function(){
           // var template = _.template( $("#search-template").html(), {} );
           // this.el.html( template );
-          console.log(this.$input());
+          console.log(this.$input);
       },
       
       doSearchOnEnter: function (e) {
 				if (e.which !== ENTER_KEY || !this.$input.val().trim()) {
-					return;
-				}
-				alert( "Search for " + this.$input.val() );
+          return;
+        }
+        // Move below, just here while server side is set up for specific search queries
 				this.$input.val('');
+        app.SearchResults.search(this.$input.val());
 			}
   });
-});
+// });
     

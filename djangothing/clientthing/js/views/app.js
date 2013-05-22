@@ -19,13 +19,16 @@ var app = app || {};
 		initialize: function () {
 
 			new app.SearchResultsView();
+			new app.SearchBarView();
 			// this is where we will authenticate us as a valid app to the Thingsbook API
-			// $.ajaxSetup({
-			//     headers: {
-			//         'user_id': dataWeb.get("id"),
-			//         'api_key': dataWeb.get("api_key")
-			//     }
-			// });
+			$.ajaxSetup({
+		    headers: {
+		        // 'user_id': dataWeb.get("id"),
+		        // 'api_key': dataWeb.get("api_key"),
+						// 'Access-Control-Allow-Origin': 'null',
+						// origin: 'tor'
+		    }
+			});
 
 	
 			// var allThings = new app.ThingsList();

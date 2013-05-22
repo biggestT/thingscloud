@@ -26,7 +26,9 @@
                             <a href="">ThingsBook</a>
                         </h1>
                     </div> -->
-                    <input id="searchBar" class="search-query" placeholder="Which thing are you looking for?" autofocus>
+                    <div id="searchBar">
+                        <input type="search" id="searchField" class="search-query" placeholder="Which thing are you looking for?" autofocus>
+                    </div>
                 </div>
             </div>
         <div id="globalContainer">
@@ -68,7 +70,7 @@
     <script type="text/javascript" src="js/lib/backbone.localStorage-min.js"></script>
     <!-- Application specific JavaScripts -->
     <script src="js/models/thing.js"></script>
-    <script src="js/collections/things.js"></script>
+    <script src="js/collections/searchResults.js"></script>
     <script src="js/views/searchBar.js"></script>
     <script src="js/views/searchResults.js"></script>
     <script src="js/views/thingThumb.js"></script>

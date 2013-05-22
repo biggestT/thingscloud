@@ -30,7 +30,7 @@ h1, h2, h3, h4, h5, h6 {
 	.thumbnail {
 		width: 100px;
 	}
-	#searchBar {
+	#searchField {
 		padding: 10px;
 		margin: 10px 10%;
 		width: 300px;
