@@ -1,27 +1,31 @@
-body {
+/*body {
 	font-size: 12px;
 	font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
 	color: #333;
 	line-height: 1.28;
 	text-align: left;
 	direction: ltr;
-}
+}*/
 
 div {
 display: block;
 }
-
-h1, h2, h3, h4, h5, h6 {
+li, ul, ol {
+    list-style: none;
+    padding: 0px; 
+    margin: 0px;
+}
+/*h1, h2, h3, h4, h5, h6 {
 	font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
 	font-size: 13px;
 	color: #333;
 	margin: 0;
 	padding: 0;
-}
+}*/
 
-	h1 {
+/*	h1 {
 		font-size: 15px;
-	}
+	}*/
 	a {
 		cursor: pointer;
 		color: #3b5998;
@@ -34,15 +38,24 @@ h1, h2, h3, h4, h5, h6 {
 	#searchBar {
 
 	}
+	form {
+		width: 30%;
+		float: right;
+	}
 		#searchField {
 			padding: 10px;
-			margin: 10px 10%;
-			width: 300px;
+			margin: 10px 0%;
+			width: 20%;
 			outline: none;
+			/*float: left;*/
 		}
 		#logo {
-			/*float:left;*/
-			width: 20;
+			margin: 15px 20px 10px 10%;
+			float: left;
+			width: 15;
+		}
+		#formAddThing {
+			/*float: right;*/
 		}
 #pageLogo a, #pageLogo a:hover, #pageLogo a:focus, #pageLogo a:active {
 	background-image: url(../images/thingsBookLogo.png);

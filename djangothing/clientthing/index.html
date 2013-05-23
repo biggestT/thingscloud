@@ -10,9 +10,9 @@
     <meta property="og:site_name" content="Thingsbook" />
     <meta property="fb:admins" content="542090519" />
     <title>ThingsBook</title>
-    <link type="text/css"href="css/thingsbook.css"  rel="stylesheet" >
     <link type="text/css"href="css/bootstrap/bootstrap.min.css"  rel="stylesheet" >
     <link type="text/css"href="css/bootstrap/bootstrap-responsive.min.css"  rel="stylesheet" >
+    <link type="text/css"href="css/thingsbook.css"  rel="stylesheet" >
     <link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
@@ -21,13 +21,8 @@
     <div id="thingsbookApp"> 
             <div id="greenBarHolder" class="slim">
                 <div id="greenBar">
-                    <!-- <div id="pageHead">
-                        <h1 id="pageLogo">
-                            <a href="">ThingsBook</a>
-                        </h1>
-                    </div> -->
+                    <img id="logo" src="images/logo.svg" type="image/svg+xml" />
                     <div id="searchBar">
-                        <img id="logo" src="images/logo.svg" type="image/svg+xml" />
                         <input type="search" id="searchField" class="search-query" placeholder="Which thing are you looking for?" autofocus>
                     </div>
                     <div id="formAddThing">
@@ -57,10 +52,10 @@
             <!-- Template for viewing a thing's thumbnail -->
             <script type="text/template" id="thingThumb-template">
                 <div class="view">
-                    <img class="thumbnail profileLink" src="<%= photo %>"/>
+                    <img class="thumbnail profileLink" src="http://placehold.it/350x150"/>
                     <ul>
-                        <li><%= tag %></li>
-                        <li><a href="<%= owner %>">Owner</a></li>
+                        <li class="label"><%= tag %></li>
+                        <li class="label"><a href="<%= owner %>">Owner</a></li>
                     </ul>
                 </div>
             </script>
