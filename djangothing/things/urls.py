@@ -12,5 +12,6 @@ router.register(r'things', views.ThingsViewSet)
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
     url(r'^search/(?P<searchtag>.+)/$', views.ThingsViewTagSearch.as_view()),
+    url(r'^add', views.ThingsList.as_view()),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )

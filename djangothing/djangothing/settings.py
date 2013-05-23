@@ -111,6 +111,6 @@ REST_FRAMEWORK = {
 
     # Ery AllowAny set to try api with client without log in.
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
-    'PAGINATE_BY': 10
+    'PAGINATE_BY': 10,
 
 }

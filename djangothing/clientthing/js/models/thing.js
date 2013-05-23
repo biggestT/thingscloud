@@ -12,12 +12,9 @@ var app = app || {};
 		// Default attributes for the todo
 		// and ensure that each todo created has `title` and `completed` keys.
 		defaults: {
-			tags: ["no tags"],
-			photo: 'http://placehold.it/350x150',
-			owner: {
-				surname: "unknown",
-				lastname: "unknown"
-			}
+			tag: ["N/A"],
+			photo: "http://placehold.it/350x150",
+			owner: 1
 		}
 
 	});
