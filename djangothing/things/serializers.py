@@ -6,6 +6,8 @@ class ThingSerializer(serializers.ModelSerializer):
 	# TODO: solve owner name
 	# owner = serializers.RelatedField();
 	# tag = serializers.PrimaryKeyRelatedField(many=True);
+	owner = serializers.Field(source='owner.username');
+	tag = serializers.PrimaryKeyRelatedField(many=True);
 	class Meta:
 		model = Thing
 		# fields = ('tag', 'photo', 'time', 'owner')
@@ -30,9 +32,11 @@ class ThingSerializer(serializers.ModelSerializer):
 		# 	return Thing(**attrs)
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    things = serializers.PrimaryKeyRelatedField(many=True)
+    
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'things')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
