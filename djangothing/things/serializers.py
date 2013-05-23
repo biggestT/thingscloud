@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 
 class ThingSerializer(serializers.HyperlinkedModelSerializer):
 	# TODO: solve owner name
-	owner = serializers.RelatedField();
+	owner = serializers.Field(source='owner.username')
+	# owner = serializers.RelatedField();
 	tag = serializers.PrimaryKeyRelatedField(many=True);
 	class Meta:
 		model = Thing
@@ -30,9 +31,11 @@ class ThingSerializer(serializers.HyperlinkedModelSerializer):
 			return Thing(**attrs)
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    things = serializers.PrimaryKeyRelatedField(many=True)
+    
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'things')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:

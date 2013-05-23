@@ -1,7 +1,9 @@
 from things.models import Thing, Tag
+from things.permissions import IsOwnerOrReadOnly
 from django.contrib.auth.models import User
 from rest_framework import viewsets, generics
 from things.serializers import ThingSerializer, UserSerializer, TagSerializer
+from rest_framework import permissions
 
 class ThingsViewSet(viewsets.ModelViewSet):
 	queryset = Thing.objects.all()
@@ -11,13 +13,31 @@ class UsersViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
 
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 class TagsViewSet(viewsets.ModelViewSet):
 	queryset = Tag.objects.all()
 	serializer_class = TagSerializer
 
-class ThingsList(generics.ListCreateAPIView):
+class ThingDetails(generics.RetrieveUpdateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
     queryset = Thing.objects.all()
     serializer_class = ThingSerializer
+    def pre_save(self, obj):
+        obj.owner = self.request.user
+    
+class ThingsList(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+    queryset = Thing.objects.all()
+    serializer_class = ThingSerializer
+    def pre_save(self, obj):
+        obj.owner = self.request.user
 
 class ThingsViewTagSearch(generics.ListAPIView):
     serializer_class = ThingSerializer

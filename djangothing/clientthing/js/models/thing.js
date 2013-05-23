@@ -13,7 +13,7 @@ var app = app || {};
 		// and ensure that each todo created has `title` and `completed` keys.
 		defaults: {
 			tags: ["no tags"],
-			photo: 'http://placehold.it/350x150',
+			photo: 'http://placehold.it/200',
 			owner: {
 				surname: "unknown",
 				lastname: "unknown"

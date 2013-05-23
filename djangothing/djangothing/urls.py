@@ -1,6 +1,6 @@
 	
 from django.conf.urls import patterns, include, url
-
+from django.conf.urls import include
 from django.contrib import admin
 admin.autodiscover()
 
@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url( r'^search/', include( 'ajaxsearch.urls' )),
     url( r'^users/', include( 'quickstartREST.urls' )),
     url( r'^things/', include( 'things.urls' )),
+    
 
 )
 
