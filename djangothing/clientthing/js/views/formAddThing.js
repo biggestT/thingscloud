@@ -27,21 +27,24 @@ app.FormAddThingView = Backbone.View.extend({
 		var photo = this.$image.val();
 
 		var tagModel = new app.Tag({word: tag});
-		var thingModel = new app.Thing({photo: photo, tag:[tag]});
+		var thingModel = new app.Thing({photo: photo, tag:[tag], owner: 1});
 		console.log(JSON.stringify(thingModel));
 		
 		$.ajax({
 			type: "POST",
 			url: urltag,
+			complete: function () {
+				$.ajax({
+					type: "POST",
+					url: urlthing,
+					data: JSON.stringify(thingModel),
+					contentType: 'application/json'
+				});
+			}.bind(thingModel),
 			data: JSON.stringify(tagModel),
 			contentType: 'application/json'
 		});
-		$.ajax({
-			type: "POST",
-			url: urlthing,
-			data: JSON.stringify(thingModel),
-			contentType: 'application/json'
-		});
+		
     	return false;
 	}
 });	

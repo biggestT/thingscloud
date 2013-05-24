@@ -6,8 +6,8 @@ class ThingSerializer(serializers.ModelSerializer):
 	# TODO: solve owner name
 	# owner = serializers.RelatedField();
 	# tag = serializers.PrimaryKeyRelatedField(many=True);
-	owner = serializers.Field(source='owner.username');
-	tag = serializers.PrimaryKeyRelatedField(many=True);
+	# owner = serializers.Field(source='owner.username');
+	# tag = serializers.PrimaryKeyRelatedField(many=True);
 	class Meta:
 		model = Thing
 		# fields = ('tag', 'photo', 'time', 'owner')
