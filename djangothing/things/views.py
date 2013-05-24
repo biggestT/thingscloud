@@ -32,7 +32,8 @@ class ThingDetails(generics.RetrieveUpdateAPIView):
     def pre_save(self, obj):
         obj.owner = self.request.user
     
-class ThingsList(generics.ListCreateAPIView):
+
+class ThingsList(generics.ListCreateAPIView):   
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
     queryset = Thing.objects.all()
     serializer_class = ThingSerializer
@@ -43,6 +44,5 @@ class ThingsViewTagSearch(generics.ListAPIView):
     serializer_class = ThingSerializer
 
     def get_queryset(self):
-    	searchtags = self.kwargs['searchtag']
-
-    	return Thing.objects.all().filter(tag__word=searchtag)
+    	searchtag = self.kwargs['searchtag']
+    	return Thing.objects.all().filter(tag__word__icontains=searchtag)
