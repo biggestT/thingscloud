@@ -39,6 +39,7 @@ app.FormAddThingView = Backbone.View.extend({
 			// TAGS.add(tagModel);
 			$.ajax({
 				type: "POST",
+				async: false,
 				url: urltag,
 				data: JSON.stringify(tagModel),
 				contentType: 'application/json',
@@ -57,7 +58,7 @@ app.FormAddThingView = Backbone.View.extend({
 			data: JSON.stringify(thingModel),
 			contentType: 'application/json',
 		});
-		
+
 		this.$tag.val('');
 		this.$image.val('');
     	return false;
