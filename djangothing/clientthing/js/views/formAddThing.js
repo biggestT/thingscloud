@@ -2,23 +2,29 @@
 var app = app || {};
 
 app.FormAddThingView = Backbone.View.extend({
-	el:$("#formAddThing"),
+	el:$("#addThing"),
 
 	// perform post to db
 	events: {
-		"submit" : "getFormData"
+		"submit" : "getFormData",
+		"click #startCamera": "startCamera",
 	},
 
 	initialize: function(){
 		this.$tag = this.$('#form-tag');
 		this.$image = this.$('#form-image');
+		this.$camera = this.$('#camera');
+		this.$cameraStartButton = this.$('#startCamera');
 		this.render();
 	},
 
 	render: function(){
 
 	},
-
+	startCamera: function () {
+		new app.CameraModel();
+		this.$cameraStartButton.hide();
+	},
 	getFormData: function(event){
 		var urlthing = "http://127.0.0.1:8000/things/add/"
 		var urltag = "http://127.0.0.1:8000/things/tags/"

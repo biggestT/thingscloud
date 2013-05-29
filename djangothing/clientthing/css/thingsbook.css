@@ -80,6 +80,11 @@ a, a:hover {
 	#formAddThing {
 			
 	}
+		#camera {
+			margin: 20px 0px;
+			width: 100%;
+			-webkit-filter: contrast(1.5) blur(0.5px) saturate(0.6);
+		}
 	#formLogin {
 		
 	}
