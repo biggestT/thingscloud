@@ -15,114 +15,84 @@ li, ul, ol {
     padding: 0px; 
     margin: 0px;
 }
-/*h1, h2, h3, h4, h5, h6 {
-	font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
-	font-size: 13px;
-	color: #333;
-	margin: 0;
-	padding: 0;
-}*/
 
-/*	h1 {
-		font-size: 15px;
-	}*/
-	a {
-		cursor: pointer;
-		color: #3b5998;
-		text-decoration: none;
-	}
-	/* SEARCH AREA */
-	#searchBar {
-
-	}
-	.view {
-		float:left;
-		margin-top: 15px;
-		margin-right: 15px;
-	}	
-		.thumbnail {
-			width: 150px;
-		}
-
-		#searchField {
-			padding: 10px;
-			margin: 10px 0%;
-			width: 40%;
-			outline: none;
-			/*float: left;*/
-		}
-		#logo {
-			margin: 20px 20px 10px 10%;
-			float: left;
-			width: 12;
-		}
-		#addThing {
-			width: 30%;
-			float: right;
-			/*float: right;*/
-		}
-			#formAddThing {
-				height: 100%;
-		}
-		#login {
-			width: 10%;
-			float: right;
-			/*float: right;*/
-		}
-			#formLogin {
-				/*height: 100%;*/
-			}
-	footer {
-		clear: both;
-	}
-#pageLogo a, #pageLogo a:hover, #pageLogo a:focus, #pageLogo a:active {
-	background-image: url(../images/thingsBookLogo.png);
-	background-repeat: no-repeat;
-	background-size: auto;
-	background-position: 0 0;
-	display: block;
-	height: 26px;
-	width: 125px;
-	outline: none;
-	overflow: hidden;
-	text-indent: -999px;
-	white-space: nowrap;
-	/*margin-left: auto 10%;*/
-	
+a, a:hover {
+	cursor: pointer;
+	color: #FFF;
+	text-decoration: none;
 }
-	#pageHead, #greenBar #pageHead {
-		padding-top: 20px;
-		/*margin-left: 10%;*/
-		width: auto;
-		height: 40px;
-		/*position: relative;*/
-	}
-
-	#greenBarHolder.slim {
-		/*height: 38px;*/
-	}
-#globalContainer {
-width: auto;
-margin: 0 10%;
-position: relative;
-zoom: 1;
-}
-
-#title, #signature {
-padding-top: 20px;
-}
+/* TOP BAR AREA */
 #greenBar {
 	background-color: #00BD06;
 	border-bottom: 1px solid #00B315;
 	/*min-width: auto;*/
 	position: relative;
+	padding: 10px 0px;
 	z-index: 300;
+	vertical-align: middle;
 }
+	#greenBarContent {
+		margin: 0px 10%;
+	}
+
+	#searchField {
+		padding: 10px;
+		width: 40%;
+		outline: none;
+		float: left;
+		margin-right: 20px;
+	}
+	#logo {
+		float: left;
+		width: 15px;
+		padding: 10px;
+	}
+	#navigation {
+	}
+	.navButton {
+		margin: auto 10px;
+	}
+	.nav-pills>.active>a,.nav-pills>.active>a:hover, .nav-pills>.active>a:focus, .nav-pills>.navButton>a:hover {
+		background-color: #1BC408;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+	}
+	
+	footer {
+		clear: both;
+	}
+	
+/* MAIN CONTENT */
+#globalContainer {
+	width: auto;
+	margin: 0 10%;
+	position: relative;
+	zoom: 1;
+}	
+	/* FORMS */
+	#forms {
+		width: 40%;
+		float: right;
+	}
+	.input {
+		/*width: 30%;*/
+		margin: 10px;
+	}
+	#formAddThing {
+			
+	}
+	#formLogin {
+		
+	}
+
+	/* VIEWS FOR THUMNAILS*/
+	.view {
+		float:left;
+		margin-top: 15px;
+		margin-right: 15px;
+	}	
+	.thumbnail {
+		width: 150px;
+	}
 
 
-		#pageLogo {
-			float: left;
-			margin-left: -7px;
-			padding-right: 1px;
-			z-index: 5;
-		}
+

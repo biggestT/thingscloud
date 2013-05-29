@@ -1,3 +1,4 @@
+import sys
 from things.models import Thing, Tag
 from things.permissions import IsOwnerOrReadOnly
 from django.contrib.auth.models import User
@@ -44,5 +45,7 @@ class ThingsViewTagSearch(generics.ListAPIView):
     serializer_class = ThingSerializer
 
     def get_queryset(self):
+        # searchtags = self.kwargs['searchtag'].split('%20')
     	searchtag = self.kwargs['searchtag']
+
     	return Thing.objects.all().filter(tag__word__icontains=searchtag)
