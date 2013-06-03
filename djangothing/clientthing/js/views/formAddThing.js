@@ -2,7 +2,7 @@
 var app = app || {};
 
 app.FormAddThingView = Backbone.View.extend({
-	el:$("#addThing"),
+	// el:$("#addThing"),
 
 	// perform post to db
 	events: {

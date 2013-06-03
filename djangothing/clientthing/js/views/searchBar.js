@@ -8,7 +8,7 @@ var app = app || {};
 	// --------------
  	app.SearchBarView = Backbone.View.extend({
 
-      el: $("#searchBar"),
+      // el: $("#searchBar"),
 
       // perform search when key is pressed while inside a searchfield
  			events: {
@@ -33,6 +33,8 @@ var app = app || {};
         }
         // Move below, just here while server side is set up for specific search queries
         app.SearchResults.search(this.$input.val());
+        // Navigate to an appropriate URL
+        app.thingsbookRouter.navigate("search/" + this.$input.val(), {trigger: true});
 				this.$input.val('');
 			}
   });

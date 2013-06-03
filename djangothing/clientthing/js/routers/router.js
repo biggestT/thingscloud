@@ -8,19 +8,24 @@ var app = app || {};
 	// ----------
 	var Workspace = Backbone.Router.extend({
 		routes: {
-			'*filter': 'setFilter'
+			"about":                 "about",    // #page about thingsbook
+			"companies":             "companies",    // #page for companies
+			"contact":               "contact",    // #page for contacting thingsbook
+	    "search/:query":        "search",  // #search/hammer
+	    "things/:id": 					"thingProfile"   // #things/id3
 		},
 
-		setFilter: function (param) {
-			// Set the current filter to be used
-			app.TodoFilter = param || '';
+		about : function () {
+			
+		},
+		thingProfile: function (id) {
 
-			// Trigger a collection filter event, causing hiding/unhiding
-			// of Todo view items
-			app.Todos.trigger('filter');
+		},
+		search: function (query) {
+
 		}
 	});
 
-	app.TodoRouter = new Workspace();
-	Backbone.history.start();
+	app.thingsbookRouter = new Workspace();
+	Backbone.history.start({pushState: true});
 })();
