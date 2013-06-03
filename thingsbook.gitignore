@@ -38,3 +38,4 @@ nosetests.xml
 
 # THINGSBOOK SPECIFIC IGNORES
 djangothing/db.sqlite3
+.pub
