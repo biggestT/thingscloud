@@ -3,7 +3,7 @@
  * GET home page.
  */
 var request = require('superagent');
-var neoURL = process.env.NEO4J_URL || 'http://localhost:7474/db/data';
+var neoURL = process.env.NEO4J_REST_URL || 'http://localhost:7474/db/data';
 
 exports.index = function(req, res) {
 	console.log(neoURL);
