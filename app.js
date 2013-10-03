@@ -10,11 +10,18 @@ var http = require('http');
 var path = require('path');
 var neo4j = require('neo4j');
 
-var app = express();
-var db = new neo4j.GraphDatabase('http://localhost:7474');
+// global app object
+app = express();
+
+// connect to local neo4j database 
+var localNeo4jURL = 'http://localhost:7474';
+var db = new neo4j.GraphDatabase(localNeo4jURL);
+
 
 // all environments
 app.set('port', process.env.PORT || 8000);
+app.set('neo4j', (process.env.NEO4J_URL  || localNeo4jURL) + '/db/data/cypher');
+console.log(app.get('neo4j'));
 app.set('views', __dirname + '/views');
 app.use(express.favicon());
 app.use(express.logger('dev'));
