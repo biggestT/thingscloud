@@ -1,11 +1,5 @@
 
-Cypher (version 1.9.x) queries for Thingscloud
-#####################################
-
-
-Initialize a new test database for thingscloud
-----------------------------
-
+// Cypher (version 1.9.x) queries for Thingscloud
 
 CREATE (root),(tor { name:'Tor' }),(emil { name:'Emil' }),(alexander { name:'Alexander'}),
 
@@ -50,9 +44,15 @@ emil-[:OWNS {since: '2010-01-10'}]->thing3
 
 
 
-Get a list of all things owned by a certain user
----------------------------------------
+// Get a list of all things owned by a certain user
 
-# x = users name
 
-START user=node(*) MATCH user-[:OWNS]->thing WHERE user.name='x'  RETURN thing
+// x = users name
+
+START me=node:node_auto_index(name="Tor") 
+MATCH me-[r:OWNS]->t 
+WITH t AS thing, r.since AS ownedSince 
+MATCH tag<-[:IS]-thing 
+WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince 
+RETURN tags, visibility, ownedSince
+ORDER BY ownedSince DESC
