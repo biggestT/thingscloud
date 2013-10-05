@@ -5,7 +5,8 @@
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
+var users = require('./routes/users');
+var usersThings = require('./routes/usersThings');
 var http = require('http');
 var path = require('path');
 var neo4j = require('neo4j');
@@ -37,7 +38,8 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/users', users.list);
+app.get('/users/:name', usersThings.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on '  + app.get('port'));

@@ -41,18 +41,21 @@ tor-[:USES {since: '2013-07-10' }]->thing5,
 emil-[:OWNS {since: '2010-01-10'}]->thing3
 
 
+// Set all names to lowercase
 
+START n=node(*) 
+WHERE HAS (n.name) 
+SET n.name = LOWER(n.name)
 
 
 // Get a list of all things owned by a certain user
 
-
-// x = users name
-
 START me=node:node_auto_index(name="Tor") 
 MATCH me-[r:OWNS]->t 
 WITH t AS thing, r.since AS ownedSince 
+MATCH photos-[:PHOTO_OF]->thing
+WITH thing, ownedSince, COLLECT(photos.url) AS photos
 MATCH tag<-[:IS]-thing 
-WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince 
-RETURN tags, visibility, ownedSince
+WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince, photos
+RETURN tags, photos, visibility, ownedSince
 ORDER BY ownedSince DESC
