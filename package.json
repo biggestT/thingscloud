@@ -9,7 +9,8 @@
     "express": "3.4.x ",
     "jade": "*",
     "superagent": "*",
-    "neo4j": "~0.2.20"
+    "neo4j": "~0.2.20",
+    "dbox": "0.6.1"
   },
   "engines": {
     "node": "0.10.x",

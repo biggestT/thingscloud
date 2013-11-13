@@ -11,7 +11,6 @@ exports.list = function(req, res){
 			query: "START n=node(*) where has(n.name) return n.name"
 		})
 		.end(function (neo4jRes){
-			res.header("Access-Control-Allow-Origin", "*");
 			res.send(neo4jRes.text);
 		});
 };
