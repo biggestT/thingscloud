@@ -59,6 +59,10 @@ app.get('*', getUserIdFromDropbox);
 app.post('*', getUserIdFromDropbox);
 
 function getUserIdFromDropbox (req, res, next) {
+	
+	// Set all response headers to json type
+	res.setHeader('Content-Type', 'application/json');
+
 	request
 		.get('https://api.dropbox.com/1/account/info' + '?access_token=' + req.query.access_token)
 		.end( function(error, res) {
