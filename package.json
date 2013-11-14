@@ -10,7 +10,8 @@
     "jade": "*",
     "superagent": "*",
     "neo4j": "~0.2.20",
-    "dbox": "0.6.1"
+    "dbox": "0.6.1",
+    "dropbox": "~0.10.2"
   },
   "engines": {
     "node": "0.10.x",
