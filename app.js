@@ -12,16 +12,6 @@ var path = require('path');
 // var dropbox = require('dropbox');
 var request = require('superagent');
 
-// Dropbox-js for authentication with Dropbox
-
-// var DROPBOX_APP_KEY = "cd4zzu95jt7sylk"
-// var DROPBOX_APP_SECRET = "h9nriwl3nysyh3s";
-
-// var dbClient = new dropbox.Client({
-//     key: "your-key-here",
-//     secret: "your-secret-here"
-// });
-
 // Neo4j database 
 var neo4j = require('neo4j');
 var localNeo4jURL = 'http://localhost:7474';

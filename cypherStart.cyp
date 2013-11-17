@@ -78,3 +78,13 @@ ORDER BY ownedSince DESC
 // Clear the whole graph
 
 START n = node(*) MATCH n-[r?]-() WHERE ID(n)>0 DELETE n, r;
+
+START me=node:node_auto_index(name='Tor Nilsson Ohrn') 
+MATCH me-[r:OWNS]->t 
+WHERE me.uid=113599483
+WITH t AS thing, r.since AS ownedSince 
+MATCH photo-[?:PHOTO_OF]->thing 
+WITH thing, ownedSince, photo.url AS photo 
+MATCH tag<-[?:IS]-thing 
+WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince, photo 
+RETURN tags, photo, visibility, ownedSince ORDER BY ownedSince DESC

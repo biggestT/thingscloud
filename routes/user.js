@@ -3,20 +3,38 @@
  */
 var request = require('superagent');
 
+// Parses column style neo4j query result into backbone styled JSON suitable for client applications
+function sendJSONResponse (neo4jRes) {
 
+	// build JSON object from neo4j result
+	var result = neo4jRes.body;
+  var parsed = [];
+
+  for (var k in result.data) {
+    var object = {};
+    for (var c in result.columns) {
+      var cn = result.columns[c];
+      object[cn] = result.data[k][c];
+    }
+    parsed.push(object);
+  }
+
+  // send array if multiple results or just one object if not
+  parsed = (parsed.length == 1) ?  parsed[0] : parsed;
+  this.send(parsed);
+}
 
 exports.getThings = function(req, res){
 
   request.post(app.get('neo4j'))
   	.send({
-			query: "START me=node:node_auto_index(name={name}) WHERE me.uid={uid} MATCH me-[r:OWNS]->t WITH t AS thing, r.since AS ownedSince MATCH photo-[:PHOTO_OF]->thing WITH thing, ownedSince, photo.mediumPhoto AS mediumPhoto MATCH tag<-[:IS]-thing WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince, mediumPhoto RETURN tags, mediumPhoto, visibility, ownedSince ORDER BY ownedSince DESC",
+			query: "START me=node:node_auto_index(name={name}) MATCH me-[r:OWNS]->t WHERE me.uid={uid}  WITH t AS thing, r.since AS ownedSince MATCH photo-[?:PHOTO_OF]->thing WITH thing, ownedSince, photo.path AS path, photo.url AS photo MATCH tag<-[?:IS]-thing WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, path, ownedSince, photo RETURN tags, photo, path, visibility, ownedSince ORDER BY ownedSince DESC",
 			params: {
-				uid: req.uid
+				uid: req.uid,
+				name: req.name
 			}
 		})
-		.end(function (neo4jRes){
-			res.send(neo4jRes.text);
-		});
+		.end(sendJSONResponse.bind(res));
 };
 
 // Gets a user's profile or creates it if it doesn't exist
@@ -30,11 +48,7 @@ exports.getProfile = function(req, res){
 				name: req.name
 			}
 		})
-		.end(function (neo4jRes){
-			// if(JSON.parse(neo4jRes.text).
-			res.send(neo4jRes.text);
-			console.log(neo4jRes.text);
-		});
+		.end(sendJSONResponse.bind(res));
 };
 
 exports.addProfile = function(req, res){
@@ -50,10 +64,7 @@ exports.addProfile = function(req, res){
 				since: now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() 
 			}
 		})
-		.end(function (neo4jRes){
-			res.send(neo4jRes.text);
-			console.log(neo4jRes.text);
-		});
+		.end(sendJSONResponse.bind(res));
 };
 
 exports.addThing = function(req, res){
@@ -71,7 +82,5 @@ exports.addThing = function(req, res){
 				date: req.body.created
 			}
 		})
-		.end(function (neo4jRes){
-			console.log(neo4jRes.text);
-		});
+		.end(sendJSONResponse.bind(res));
 };
