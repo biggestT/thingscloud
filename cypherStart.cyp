@@ -88,3 +88,15 @@ WITH thing, ownedSince, photo.url AS photo
 MATCH tag<-[?:IS]-thing 
 WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince, photo 
 RETURN tags, photo, visibility, ownedSince ORDER BY ownedSince DESC
+
+
+// TEST DELETE THING
+START me=node:node_auto_index(name='Tor Nilsson Ohrn') 
+MATCH me-[r:OWNS]->t 
+WHERE me.uid=113599483 AND t.tId='6YLvy4ZQK' 
+WITH t AS thing 
+MATCH photo-[r?:PHOTO_OF]->thing 
+WITH thing, r AS photoRelation, photo
+MATCH tag<-[taggedRelation?:IS]-thing 
+DELETE thing, photo, photoRelation, taggedRelation 
+RETURN photo.path

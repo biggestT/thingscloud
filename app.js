@@ -4,9 +4,7 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var users = require('./routes/users');
-var user = require('./routes/user');
+var api = require('./routes/api');
 var http = require('http');
 var path = require('path');
 // var dropbox = require('dropbox');
@@ -23,13 +21,12 @@ app = express();
 // all environments
 app.set('port', process.env.PORT || 8000);
 app.set('neo4j', (process.env.NEO4J_URL  || localNeo4jURL) + '/db/data/cypher');
-app.set('views', __dirname + '/views');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 
 // development only where we skip CORS protection
@@ -37,6 +34,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
   app.all('*', function(req, res, next) {
 	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Methods", "DELETE");
 	  res.header("Access-Control-Allow-Headers", "Content-Type");
 	  next();
 	});
@@ -47,6 +45,7 @@ if ('development' == app.get('env')) {
 // to the access_token retrieved from the thingsbook client
 app.get('*', getUserIdFromDropbox);
 app.post('*', getUserIdFromDropbox);
+app.delete('*', getUserIdFromDropbox);
 
 function getUserIdFromDropbox (req, res, next) {
 	
@@ -58,6 +57,7 @@ function getUserIdFromDropbox (req, res, next) {
 		.end( function(error, res) {
 			var userInfo = JSON.parse(res.text);
 			// pass the confirmed dropbox uid on with the request objects to be used in the actual CRUD method
+			console.log(userInfo.uid);
 			req.uid = userInfo.uid;
 			req.name = userInfo.display_name;
   		next();
@@ -70,16 +70,17 @@ function getUserIdFromDropbox (req, res, next) {
 // app.get('/users', users.list);
 
 // Get a user's profile
-app.get('/:name', user.getProfile);
+app.get('/:name', api.getProfile);
+// app.get('/:tid', api.getThing);
 // Lists the things belonging to a user
-app.get('/:name/things', user.getThings);
+app.get('/:name/things', api.getThings);
 
 // Set up POST routes
-
+app.delete('/:tid', api.deleteThing)
 // Add a new user
-app.post('/:name', user.addProfile);
+app.post('/:name', api.addProfile);
 // Add a thing to a user
-app.post('/:name/things', user.addThing);
+app.post('/:name/things', api.addThing);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on '  + app.get('port'));
