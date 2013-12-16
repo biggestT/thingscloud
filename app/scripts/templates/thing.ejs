@@ -1,0 +1,39 @@
+
+	<div class="col-lg-3 col-md-4 col-sm-6">
+			<a class="object thumbnail thing-thumbnail" style="background-image: url(<%= photo %>);">
+				<div class="row">
+					<div class="btn-group col-lg-10">
+					<% for(var i=0; i<tags.length; i++) { %>
+				      <button class="btn"><%= tags[i] %></button>
+					<% } %>
+					</div>
+					<div class="options-container col-md-2">
+				  		<div class="btn-group">
+				  			<button type="button" class="btn delete"><i class="fa fa-times">
+								</i></button>
+				  		</div>
+				  </div>
+				</div>
+			
+
+			<div class="options-container new-tag row">
+				<div class="col-md-12">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-tag"></i></span>
+						<input type="text" class="new-tag-input form-control" placeholder="new tagname">
+					</div>
+				</div>
+			</div>
+
+			<% if (processing) { %>
+			<div class="processing row">
+				<div class="col-md-12">
+					<span class="badge processing center-thing"><i class="fa fa-spin fa-refresh"></i></span>
+				</div>
+			</div>
+			<% } %>
+
+				
+			</a>
+</div>
+

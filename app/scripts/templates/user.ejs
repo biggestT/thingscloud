@@ -1,0 +1,26 @@
+<div class="row profile">
+		<% if (authenticated) { %>
+	<div class="col-lg-3">
+			<h2><%= name %></h2>
+			<h5>member since: <%= since %></h5>
+		<% } else { %>
+			<h2>Visitor</h2>
+		<% } %>
+		<div id="login">
+			<!-- Filled by login view -->
+		</div>
+	</div>
+	<% if (authenticated) { %>
+		<div class="col-lg-9">
+			<section id="add"></section>
+		</div>
+	<% } %>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<ul class="things-list list-unstyled">
+			<!-- Filled by things collection view -->
+		</ul>
+	</div>
+</div>
+

@@ -1,0 +1,13 @@
+
+	<% if (!open) { %>
+	<button type='button' class='btn btn-primary add-open' value=''>
+		 <i class="fa fa-dropbox"></i> Add things from your Dropbox
+	</button>
+	<% } else { %>
+	<button type='button' class='btn btn-primary add-upload ' value=''>
+		 <i class="fa fa-dropbox"></i> Upload selected photos
+	</button>
+	<ul class="photo-list list-unstyled">
+	</ul>
+	<div class="clear"></div>
+	<% } %>

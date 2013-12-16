@@ -1,0 +1,16 @@
+{
+  "name": "thingsbook",
+  "version": "0.0.0",
+  "dependencies": {
+    "jquery": "~1.9.0",
+    "underscore": "~1.4.3",
+    "backbone": "~1.0.0",
+    "requirejs": "~2.1.5",
+    "requirejs-text": "~2.0.5",
+    "modernizr": "~2.6.2",
+    "d3": "~3.3.8",
+    "sass-bootstrap": "~3.0.0",
+    "async": "~0.2.5",
+    "font-awesome": "~4.0.3"
+  }
+}
