@@ -51,7 +51,6 @@ define([
 			var html = this.template(this.model.toJSON());
 			$(this.el).append(html);
 
-			// this.$('.image-container').prepend(this.$img);
 			console.log('rendering thing view');
 			this.$selected = this.$('selected');
 			this.$processing = this.$('.badge.processing');

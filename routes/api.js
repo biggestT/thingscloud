@@ -4,7 +4,7 @@
 var request = require('superagent');
 var Hashids = require('hashids');
 
-// Parses column style neo4j query result into backbone styled JSON suitable for client applications
+// Parses column style neo4j query result into backbone styled JSON suitable for client serverlications
 function sendJSONResponse (neo4jRes) {
 
 	if (!neo4jRes.error) {
@@ -61,7 +61,7 @@ function generateThingsbookID(uid) {
 
 exports.deleteThing = function (req, res) {
 	console.log(req.params.tid);
-	request.post(app.get('neo4j'))
+	request.post(server.get('neo4j'))
   	.send({
 			query: "START t=node:node_auto_index(tId={tid}) MATCH me-[:OWNS]->t, t<-[r1?:PHOTO_OF]-b, t-[r2?]-() WHERE me.uid={uid} WITH t.tId AS tid, r1, r2, t, b DELETE t, r1, b, r2 RETURN tid LIMIT 1",
 			params: {
@@ -74,7 +74,7 @@ exports.deleteThing = function (req, res) {
 
 exports.getThings = function(req, res){
 
-  request.post(app.get('neo4j'))	
+  request.post(server.get('neo4j'))	
   	.send({
 			query: "START me=node:node_auto_index(name={name}) MATCH me-[r:OWNS]->t WHERE me.uid={uid}  WITH t AS thing, r.since AS ownedSince MATCH photo-[?:PHOTO_OF]->thing WITH thing, ownedSince, photo.path AS path, photo.url AS photo MATCH tag<-[?:IS]-thing WITH thing.visibility AS visibility, thing.tId AS tid, COLLECT(tag.tag) AS tags, path, ownedSince, photo RETURN tid, tags, photo, path, visibility, ownedSince ORDER BY ownedSince DESC",
 			params: {
@@ -87,7 +87,7 @@ exports.getThings = function(req, res){
 
 // Gets a user's profile 
 exports.getProfile = function(req, res){
-  request.post(app.get('neo4j'))
+  request.post(server.get('neo4j'))
   	.send({
 			query: 
 				"START me=node:node_auto_index(name={name}) WHERE me.uid={uid} RETURN me.name AS name, me.since AS since",
@@ -103,7 +103,7 @@ exports.getProfile = function(req, res){
 exports.addProfile = function(req, res){
 
 	var now = new Date();
-  request.post(app.get('neo4j'))
+  request.post(server.get('neo4j'))
   	.send({
 			query: 
 				"START me=node:node_auto_index(name={name}) WHERE me.uid={uid} WITH COUNT(*) AS exists WHERE exists=0 CREATE (me {name: {name}, since: {since}, uid: {uid}}) RETURN me.name AS name, me.since AS since",
@@ -120,7 +120,7 @@ exports.addThing = function(req, res){
 
 	var tId = generateThingsbookID(req.uid);
 
-  request.post(app.get('neo4j'))
+  request.post(server.get('neo4j'))
   	.send({
 			query: 
 				"START me=node:node_auto_index(name={name}) WHERE me.uid={uid} CREATE (thing { tId: {tid}, visibility:{vis} }), (photo { url: {url}, path: {path} }), photo-[:PHOTO_OF]->thing, me-[:OWNS { since: {date} }]->thing RETURN thing.tId AS tid",

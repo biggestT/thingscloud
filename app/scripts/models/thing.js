@@ -89,7 +89,7 @@ define([
           //     break;
           case "delete":
             console.log('trying to delete thing');
-            options.url = 'http://127.0.0.1:8000/' + this.id  + '?access_token=' + this.collection._meta['token'];
+            options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
             break;
           // case "update":
           //     options.url = "/myService/setUser.aspx";

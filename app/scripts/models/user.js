@@ -33,7 +33,7 @@ define([
 		},
 
 		url: function () {
-			return 'http://127.0.0.1:8000/' + this._nameConcat + '?access_token=' + this._oAuthToken;
+			return Backbone.serverURL + this._nameConcat + '?access_token=' + this._oAuthToken;
 		},
 
 		getThings: function () {

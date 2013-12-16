@@ -120,7 +120,7 @@ module.exports = function (grunt) {
 			}
 		},
 		clean: {
-			dist: ['.tmp', '<%= yeoman.dist %>/*'],
+			dist: ['.tmp', '<%= yeoman.dist %>/*', '!<%= yeoman.dist %>/fonts'],
 			server: '.tmp'
 		},
 		jshint: {
@@ -322,14 +322,14 @@ module.exports = function (grunt) {
 		'uglify',
 		'copy',
 		'rev',
-		'usemin',
-		'shell:git-add-dist',
-		'shell:git-commit-build'
+		'usemin'
 	]);
 
 	
 	grunt.registerTask('heroku', [
 		'build',
+		'shell:git-add-dist',
+		'shell:git-commit-build',
 		'shell:heroku-push'
 	]);
 

@@ -19,20 +19,21 @@ var db = new neo4j.GraphDatabase(localNeo4jURL);
 server = express();
 
 // all environments
-server.set('port', process.env.PORT || 8000);
+server.set('port', process.env.PORT || 5000);
 server.set('neo4j', (process.env.NEO4J_URL  || localNeo4jURL) + '/db/data/cypher');
 server.use(express.favicon());
 server.use(express.logger('dev'));
 server.use(express.bodyParser());
 server.use(express.methodOverride());
 server.use(server.router);
+
 // server.use(express.static(path.join(__dirname, 'public')));
 
 
 // development only where we skip CORS protection
 if ('development' == server.get('env')) {
   server.use(express.errorHandler());
-  server.use(express.static(__dirname + '/server'));
+  server.use(express.static(__dirname + '/app'));
   server.all('*', function(req, res, next) {
 	  res.header("Access-Control-Allow-Origin", "*");
 	  res.header("Access-Control-Allow-Methods", "DELETE");
@@ -52,9 +53,9 @@ else if ('production' == server.get('env')) {
 // always pass requests through authentication pipeline
 // where we ask the Dropbox Core API for the UID corresponding
 // to the access_token retrieved from the thingsbook client
-server.get('*', getUserIdFromDropbox);
-server.post('*', getUserIdFromDropbox);
-server.delete('*', getUserIdFromDropbox);
+server.get('/api/*', getUserIdFromDropbox);
+server.post('/api/*', getUserIdFromDropbox);
+server.delete('/api/*', getUserIdFromDropbox);
 
 function getUserIdFromDropbox (req, res, next) {
 	
@@ -94,3 +95,5 @@ server.post('/api/:name/things', api.addThing);
 http.createServer(server).listen(server.get('port'), function(){
   console.log('Express server listening on '  + server.get('port'));
 });
+
+module.exports = server;
