@@ -7,24 +7,33 @@ var Hashids = require('hashids');
 // Parses column style neo4j query result into backbone styled JSON suitable for client applications
 function sendJSONResponse (neo4jRes) {
 
-	// build JSON object from neo4j result
-	var result = neo4jRes.body;
-  var parsed = [];
+	if (!neo4jRes.error) {
+		// build JSON object from neo4j result
+		var result = neo4jRes.body;
+	  var parsed = [];
 
-  for (var k in result.data) {
-    var object = {};
-    for (var c in result.columns) {
-      var cn = result.columns[c];
-      object[cn] = result.data[k][c];
-    }
-    parsed.push(object);
-  }
+	  for (var k in result.data) {
+	    var object = {};
+	    for (var c in result.columns) {
+	      var cn = result.columns[c];
+	      object[cn] = result.data[k][c];
+	    }
+	    parsed.push(object);
+	  }
 
-  // send array if multiple results or just one object if not
-  parsed = (parsed.length == 1) ?  parsed[0] : parsed;
-  console.log(parsed);
-  this.status(200);
-  this.send(parsed);
+	  // send array if multiple results or just one object if not
+	  parsed = (parsed.length == 1) ?  parsed[0] : parsed;
+	  console.log(neo4jRes.error);
+
+	  this.status(neo4jRes.statusCode);
+  	this.send(parsed);
+  	return 1;
+	}
+	else {
+		this.status(neo4jRes.statusCode)
+		this.send({'error': 'bad neo4jrequest'});
+	}
+	
 }
 
 // UNIQUE THINGSBOOK ID GENERATION
@@ -36,7 +45,7 @@ function sendJSONResponse (neo4jRes) {
 // HashIds uses 62 different characters in hashes, 
 // and therefore we set the hash length to 12 since 62^12 > 2^70
 
-// By nowing the secret for the Hashid we can know when by whom and when a certain thing was created from its unique tId
+// By knowing the secret for the Hashid we can know when by whom and when a certain thing was created from its unique tId
 
 
 function generateThingsbookID(uid) {
@@ -54,7 +63,7 @@ exports.deleteThing = function (req, res) {
 	console.log(req.params.tid);
 	request.post(app.get('neo4j'))
   	.send({
-			query: "START t=node:node_auto_index(tId={tid}) MATCH me-[:OWNS]->t, t<-[r1?:PHOTO_OF]-b, t-[r2?]-() WHERE me.uid={uid} DELETE t, r1, b, r2",
+			query: "START t=node:node_auto_index(tId={tid}) MATCH me-[:OWNS]->t, t<-[r1?:PHOTO_OF]-b, t-[r2?]-() WHERE me.uid={uid} WITH t.tId AS tid, r1, r2, t, b DELETE t, r1, b, r2 RETURN tid LIMIT 1",
 			params: {
 				uid: req.uid,
 				tid: req.params.tid
