@@ -10,3 +10,4 @@ Activity Diagram for authentication without the need for Thingscloud to store an
 Screenshot from the application:
 
 ![Thingsbook screenshot 19th December 2013](pics/Screenshot1219.png)
+
