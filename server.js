@@ -92,6 +92,9 @@ server.post('/api/:name', api.addProfile);
 // Add a thing to a user
 server.post('/api/:name/things', api.addThing);
 
+// Set up PUT routes
+server.put('/api/:tid', api.updateThing);
+
 http.createServer(server).listen(server.get('port'), function(){
   console.log('Express server listening on '  + server.get('port'));
 });

@@ -91,9 +91,11 @@ define([
             console.log('trying to delete thing');
             options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
             break;
-          // case "update":
-          //     options.url = "/myService/setUser.aspx";
-          //     break;
+          case "update":
+              // options.url = "/myService/setUser.aspx";
+            options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
+            console.log('updating model');
+              break;
         }
 
         if (options.url) {

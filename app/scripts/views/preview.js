@@ -15,7 +15,7 @@ define([
 			events: {
 				'click .photo-thumbnail': 'toggleSelected'
 			},
-			
+	
 			initialize: function () {
 				this.events = _.extend({}, this.objectEvents, this.events);
 	    	this.delegateEvents();

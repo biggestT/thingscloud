@@ -52,14 +52,14 @@ define([
 			.attr('cx', function (d) { return d.x; })
 			.attr('cy', function (d) { return d.y; })
 			.attr('r', r)
-			.attr('fill', 'white')
+			.attr('fill', 'grey')
 
 		var linesAttributes = lines 
 			.attr('x1', function (d) { return d.x1; })
 			.attr('y1', function (d) { return d.y1; })
 			.attr('x2', function (d) { return d.x2; })
 			.attr('y2', function (d) { return d.y2; })
-			.attr('style', 'stroke:white;stroke-width:'+r/1.3 );
+			.attr('style', 'stroke:grey;stroke-width:'+r/1.3 );
 		
 	};
 

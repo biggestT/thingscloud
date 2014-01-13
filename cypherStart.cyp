@@ -90,7 +90,7 @@ WITH thing.visibility AS visibility, COLLECT(tag.tag) AS tags, ownedSince, photo
 RETURN tags, photo, visibility, ownedSince ORDER BY ownedSince DESC
 
 
-// TEST DELETE THING
+// TEST DELETE THING WITH AUTOINDEXING
 START me=node:node_auto_index(name='Tor Nilsson Ohrn') 
 MATCH me-[r:OWNS]->t 
 WHERE me.uid=113599483 AND t.tId='6YLvy4ZQK' 
@@ -100,3 +100,54 @@ WITH thing, r AS photoRelation, photo
 MATCH tag<-[taggedRelation?:IS]-thing 
 DELETE thing, photo, photoRelation, taggedRelation 
 RETURN photo.path
+
+// TEST DELETE THING WITHOUT AUTOINDEXING
+START t=node(*)
+MATCH 
+o-[ro:OWNS]->t,
+p-[rp?:PHOTO_OF]->t,
+t-[rt?:IS]->()
+WHERE o.uid=113599483 AND t.tId! = "3DjWp1TzGnrVb"
+WITH t.tId AS tId, ro, rp, rt, t, p
+DELETE ro, rp, rt, t, p
+RETURN tId
+
+
+
+
+// I. Create new unique tags if needed
+START tag=node(*)
+WHERE tag.tagName! IN ["teest", "test2", "test3"] 
+WITH COLLECT(tag.tagName) AS existingTags
+FOREACH(newTag in filter(oldTag in ["teest", "test2", "test3"] WHERE NOT(oldTag in existingTags))  : 
+	CREATE (tag{tagName:newTag})
+)
+
+// II. Connect the thing with the tags if they exists
+START thing=node(*), tag=node(*)
+WHERE thing.tId! ="3DjWp1TzGnrVb"
+AND tag.tagName! IN ["teest", "test2", "test3"] 
+CREATE UNIQUE
+thing-[r:IS]->tag
+return r
+
+// Attempt to combine I and II
+START tag=node(*)
+WHERE tag.tagName! IN ["teest", "test2", "test3"] 
+WITH COLLECT(tag.tagName) AS existingTags
+FOREACH(newTag in filter(oldTag in ["teest", "test2", "test3"] WHERE NOT(oldTag in existingTags))  : 
+	CREATE (tag{tagName:newTag})
+)
+WITH existingTags
+START thing=node(*), tag=node(*)
+WHERE thing.tId! ="3DjWp1TzGnrVb"
+AND tag.tagName! IN ["teest", "test2", "test3"] 
+CREATE UNIQUE
+thing-[r:IS]->tag
+return tag
+
+
+START tag=node(*)
+MATCH tag<-[r:IS]-()
+DELETE rag, r
+WHERE has(tag.tagName)

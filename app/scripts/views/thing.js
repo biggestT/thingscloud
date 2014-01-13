@@ -80,12 +80,9 @@ define([
       this.$selected.toggle();
     },
 		edit: function () {
-			// this.$el.addClass('editing');
-			// this.$input.focus();
 		},
 
 		addTags: function () {
-			// this.model.addTag();
 			this.$newTag.show();
 			this.$newTagInput.focus();
 		},
@@ -112,14 +109,13 @@ define([
 					var oldTags = this.model.get('tags').slice();
 					var newTags = [];
 					newTags.push(trimmedTag);
-					// ;
-					// console.log(oldTags);
-					// console.log(newTags);
+		
 					this.model.save({ tags: newTags.concat(oldTags) });
-					// this.$newTagInput.val('');
+					
 				} else {
 					this.$newTag.hide();
 				}
+				this.addTags();
 			}
 		},
 		clear: function () {

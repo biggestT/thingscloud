@@ -66,10 +66,6 @@ module.exports = function (grunt) {
 					'<%= yeoman.app %>/scripts/templates/*.ejs'
 				],
 				tasks: ['jst']
-			},
-			test: {
-				files: ['<%= yeoman.app %>/scripts/{,*/}*.js', 'test/spec/**/*.js'],
-				tasks: ['test']
 			}
 		},
 		connect: {
@@ -86,18 +82,6 @@ module.exports = function (grunt) {
 							mountFolder(connect, '.tmp'),
 							mountFolder(connect, yeomanConfig.app),
 							require('./server'),
-						];
-					}
-				}
-			},
-			test: {
-				options: {
-					port: 9001,
-					middleware: function (connect) {
-						return [
-							lrSnippet,
-							mountFolder(connect, '.tmp'),
-							mountFolder(connect, 'test'),
 						];
 					}
 				}

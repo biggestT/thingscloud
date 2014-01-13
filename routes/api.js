@@ -31,7 +31,7 @@ function sendJSONResponse (neo4jRes) {
 	}
 	else {
 		this.status(neo4jRes.statusCode)
-		this.send({'error': 'bad neo4jrequest'});
+		this.send({'error': neo4jRes.body});
 	}
 	
 }
@@ -63,7 +63,7 @@ exports.deleteThing = function (req, res) {
 	console.log(req.params.tid);
 	request.post(server.get('neo4j'))
   	.send({
-			query: "START t=node:node_auto_index(tId={tid}) MATCH me-[:OWNS]->t, t<-[r1?:PHOTO_OF]-b, t-[r2?]-() WHERE me.uid={uid} WITH t.tId AS tid, r1, r2, t, b DELETE t, r1, b, r2 RETURN tid LIMIT 1",
+			query: "START t=node(*) MATCH me-[:OWNS]->t, t<-[r1?:PHOTO_OF]-b, t-[r2?:IS]->() WHERE has(t.tId) AND t.tId={tid} AND me.uid={uid}  WITH t.tId AS tid, r1, r2, t, b DELETE t, r1, b, r2 RETURN tid LIMIT 1",
 			params: {
 				uid: req.uid,
 				tid: req.params.tid
@@ -76,7 +76,7 @@ exports.getThings = function(req, res){
 
   request.post(server.get('neo4j'))	
   	.send({
-			query: "START me=node:node_auto_index(name={name}) MATCH me-[r:OWNS]->t WHERE me.uid={uid}  WITH t AS thing, r.since AS ownedSince MATCH photo-[?:PHOTO_OF]->thing WITH thing, ownedSince, photo.path AS path, photo.url AS photo MATCH tag<-[?:IS]-thing WITH thing.visibility AS visibility, thing.tId AS tid, COLLECT(tag.tag) AS tags, path, ownedSince, photo RETURN tid, tags, photo, path, visibility, ownedSince ORDER BY ownedSince DESC",
+			query: "START me=node(*) MATCH me-[r:OWNS]->t WHERE has(me.uid) AND me.uid={uid}  WITH t AS thing, r.since AS ownedSince MATCH photo-[?:PHOTO_OF]->thing WITH thing, ownedSince, photo.path AS path, photo.url AS photo MATCH tag<-[?:IS]-thing WITH thing.visibility AS visibility, thing.tId AS tid, COLLECT(tag.tagName) AS tags, path, ownedSince, photo RETURN tid, tags, photo, path, visibility, ownedSince ORDER BY ownedSince DESC",
 			params: {
 				uid: req.uid,
 				name: req.name
@@ -136,3 +136,25 @@ exports.addThing = function(req, res){
 		})
 		.end(sendJSONResponse.bind(res));
 };
+
+exports.updateThing = function(req, res) {
+	request.post(server.get('neo4j'))
+  	.send({
+			query: 
+					"START tag=node(*) WHERE tag.tagName! IN {tags} WITH COLLECT(tag.tagName) AS existingTags FOREACH(newTag in filter(oldTag in {tags} WHERE NOT(oldTag in existingTags))  : CREATE (tag{tagName:newTag})) WITH existingTags START thing=node(*), tag=node(*) WHERE thing.tId! = {tid} AND tag.tagName! IN {tags} CREATE UNIQUE thing-[r:IS]->tag return tag",
+			params: {
+				tid: req.params.tid,
+				tags: req.body.tags
+			}
+	})
+	.end(function (neo4jRes) {
+		if(!neo4jRes.error) {
+			// send the object as response to tell about correct update
+			res.send(req.body);
+		}
+		else {
+			res.status(neo4jRes.statusCode);
+			res.send({'error': neo4jRes.body});
+		}
+	});
+}

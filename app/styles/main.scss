@@ -1,131 +1,131 @@
 @import 'sass-bootstrap/lib/bootstrap';
 @import 'font-awesome/scss/font-awesome';
+// @import url(http://fonts.googleapis.com/css?family=Italiana);
 
 /* color variables */
-$baseColor: #48F50F;
-$secondColor: #8FF86C;
+$baseColor: #EDEDED;
+$secondColor: #F7F7F7;
+$foregroundColor: gray;
 
 $thumbnailHeight: 260px;
 
 $previewHeight: 130px;
 
-/* text variables */
 
+/* text variables */
+h2, h5{
+	// font-family: 'Italiana', sans-serif;
+}
 
 // All links and Font-awesome icons are white
 a, .fa {
-				color: white;
+	color: $foregroundColor;
 }
 
 // Same background for interactive elements
 .btn, .navbar-inner, .label, .badge, .input-group-addon, .btn-primary {
-				background-color: $baseColor;
-				border-color: $secondColor;
-				text-transform: capitalize;
-				color: white;
+	background-color: $baseColor;
+	border-color: $secondColor;
+	text-transform: capitalize;
+	color: $foregroundColor;
+	border-radius: 0px;
 }
 
 .btn:hover, .btn-primary:hover, a:hover, .nav > li > a:hover  {
-				background-color: $secondColor;
-				border-color: $baseColor;
-				color: white;
+	background-color: $secondColor;
+	border-color: $baseColor;
+	color: $foregroundColor;
 }
 
 
 .navbar-inner {
-				// padding: 7px;
-				@include gradient-vertical($baseColor, $secondColor);
+	// padding: 7px;
+	@include gradient-vertical($baseColor, $secondColor);
 }
 
 
 
 #app {
-				margin-top: 80px;
+	margin-top: 80px;
 
-				.image-container {
-								overflow: hidden;
-				}
+	.image-container {
+		overflow: hidden;
+	}
 
-				.processing {
-								position: absolute;
-								top: 40%;
-								left: 50%;
-				}
+	.processing {
+		position: absolute;
+		top: 40%;
+		left: 50%;
+	}
 
-				.object {
-								-webkit-background-size: cover;
-					-moz-background-size: cover;
-					-o-background-size: cover;
-					background-size: cover;
-				}
-				.thing-thumbnail {
-								height: $thumbnailHeight;
-					margin-bottom: $thumbnailHeight/10;
-				}
-				.photo-thumbnail {
-								height: $previewHeight;
-					margin-bottom: $previewHeight/10;
-				}
-				.transparent-semi {
-								-webkit-filter: opacity(0.5);
-								-moz-filter: opacity(0.5);
-				}
+	.object {
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+	}
+	.thing-thumbnail {
+		height: $thumbnailHeight;
+		margin-bottom: $thumbnailHeight/10;
+	}
+	.photo-thumbnail {
+		height: $previewHeight;
+		margin-bottom: $previewHeight/10;
+	}
+	.transparent-semi {
+	-webkit-filter: opacity(0.5);
+	-moz-filter: opacity(0.5);
+	}
 
-				#message-box {
+	#message-box {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		z-index: 2000;
+		text-align: center;
+		opacity: 0.8;
 
-								position: fixed;
-								left: 0;
-								top: 0;
-								width: 100%;
-								z-index: 2000;
-								text-align: center;
-								opacity: 0.8;
+		.alert {
+			padding: 10px;
+			margin-bottom: 5px;
+		}
+	}
 
-								.alert {
-												padding: 10px;
-												margin-bottom: 5px;
-								}
-				}
+	#add {
 
-				#add {
+		.photo-list {
+			height: 2*$previewHeight;
+			overflow-y: scroll;
+		}
 
-								.photo-list {
-												height: 2*$previewHeight;
-												overflow-y: scroll;
-								}
+		.badge.selected {
+			vertical-align: top;
+			position: relative;
+		}
 
-								.badge.selected {
-												vertical-align: top;
-												position: relative;
-								}
+	}
+	#user {
 
-				}
-				#user {
+		.profile {
+			height: 2*$previewHeight;
+		}
+		.object.thing {
+			display: block;
+			overflow: hidden;
+		}
+		.new-tag {
+			position: absolute;
+			top: 80%;
+		}
+		a.thumbnail:hover {
+			border-color: $foregroundColor;
+		}
+	}
 
-								.profile {
-												height: 2*$previewHeight;
-								}
-
-								.object.thing {
-												display: block;
-												overflow: hidden;
-								}
-
-								.new-tag {
-												position: absolute;
-												top: 80%;
-								}
-								
-
-								a.thumbnail:hover {
-												border-color: white;
-								}
-
-				}
-
-				.options-container {
-								display: none;
-				}
+	.options-container {
+		display: none;
+	}
 
 
 

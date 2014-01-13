@@ -49,6 +49,3 @@ require([
     
     var app = new App();
 });
-
-// global event aggregator 
-// eventAgg -
