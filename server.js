@@ -20,7 +20,8 @@ server = express();
 
 // all environments
 server.set('port', process.env.PORT || 5000);
-server.set('neo4j', (process.env.NEO4J_URL  || localNeo4jURL) + '/db/data/cypher');
+server.set('neo4jCypherUrl', (process.env.NEO4J_URL  || localNeo4jURL) + '/db/data/cypher');
+server.set('neo4j', db);
 server.use(express.favicon());
 server.use(express.logger('dev'));
 server.use(express.bodyParser());
@@ -65,6 +66,10 @@ function getUserIdFromDropbox (req, res, next) {
 	request
 		.get('https://api.dropbox.com/1/account/info' + '?access_token=' + req.query.access_token)
 		.end( function(error, res) {
+			if (error) {
+				res.status(401); // unathorized!
+				res.send(error);
+			}
 			var userInfo = JSON.parse(res.text);
 			// pass the confirmed dropbox uid on with the request objects to be used in the actual CRUD method
 			console.log(userInfo.uid);
@@ -86,11 +91,11 @@ server.get('/api/:name', api.getProfile);
 server.get('/api/:name/things', api.getThings);
 
 // Set up POST routes
-server.delete('/api/:tid', api.deleteThing)
+server.delete('/api/:tid', api.deleteThingREST)
 // Add a new user
-server.post('/api/:name', api.addProfile);
+server.post('/api/:name', api.addProfileREST);
 // Add a thing to a user
-server.post('/api/:name/things', api.addThing);
+server.post('/api/:name/things', api.addThingREST);
 
 // Set up PUT routes
 server.put('/api/:tid', api.updateThing);

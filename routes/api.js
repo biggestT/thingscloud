@@ -3,6 +3,8 @@
  */
 var request = require('superagent');
 var Hashids = require('hashids');
+var async = require('async');
+
 
 // Parses column style neo4j query result into backbone styled JSON suitable for client serverlications
 function sendJSONResponse (neo4jRes) {
@@ -45,7 +47,7 @@ function sendJSONResponse (neo4jRes) {
 // HashIds uses 62 different characters in hashes, 
 // and therefore we set the hash length to 12 since 62^12 > 2^70
 
-// By knowing the secret for the Hashid we can know when by whom and when a certain thing was created from its unique tId
+// By knowing the secret for the Hashid we can know when by whom and when a certain thing was created from its unique tid
 
 
 function generateThingsbookID(uid) {
@@ -54,29 +56,64 @@ function generateThingsbookID(uid) {
 	var now = new Date();
 	var millisecondsPassed = now.getTime() - Date.UTC(2013, 10, 01, 0, 0, 0, 0);
 
-	var tId = hash.encrypt(uid, millisecondsPassed);
+	var tid = hash.encrypt(uid, millisecondsPassed);
 
-	return tId;
+	return tid;
 }
 
 exports.deleteThing = function (req, res) {
 	console.log(req.params.tid);
-	request.post(server.get('neo4j'))
+	request.post(server.get('neo4jCypherUrl'))
   	.send({
-			query: "START t=node(*) MATCH me-[:OWNS]->t, t<-[r1?:PHOTO_OF]-b, t-[r2?:IS]->() WHERE has(t.tId) AND t.tId={tid} AND me.uid={uid}  WITH t.tId AS tid, r1, r2, t, b DELETE t, r1, b, r2 RETURN tid LIMIT 1",
+			query: "START  DELETE it, r",
 			params: {
 				uid: req.uid,
 				tid: req.params.tid
 			}
 		})
-		.end(sendJSONResponse.bind(res));
+		.end(function (neo4jRes) {
+			console.log(neo4jRes.body);
+			console.log(server.get('neo4jCypherUrl'));
+		});
+
+}
+
+exports.deleteThingREST = function (req, res) {
+
+	var db = server.get('neo4j');
+	var tid = req.params.tid;
+
+	var query = [
+	'START t=node:Things(tid={tid})',
+	'MATCH (t)-[r]-()',
+	'WITH t, r',
+	'MATCH (t)-[r1?]->(n)-[r2?]-(o)',
+	'WHERE o IS NULL AND ID(o) <> ID(t)',
+	'WITH t, r, n',
+	'DELETE r, n, t'
+	].join('\n');
+
+	params = {
+		tid: req.params.tid,
+		uid: req.uid
+	};
+
+	db.query(query, params, function(err, result) {
+		if(err) { 
+			res.status(400);
+			res.send(err.message);
+		}
+		else {
+			res.send(req.body);
+		}
+	})
 }
 
 exports.getThings = function(req, res){
 
-  request.post(server.get('neo4j'))	
+  request.post(server.get('neo4jCypherUrl'))	
   	.send({
-			query: "START me=node(*) MATCH me-[r:OWNS]->t WHERE has(me.uid) AND me.uid={uid}  WITH t AS thing, r.since AS ownedSince MATCH photo-[?:PHOTO_OF]->thing WITH thing, ownedSince, photo.path AS path, photo.url AS photo MATCH tag<-[?:IS]-thing WITH thing.visibility AS visibility, thing.tId AS tid, COLLECT(tag.tagName) AS tags, path, ownedSince, photo RETURN tid, tags, photo, path, visibility, ownedSince ORDER BY ownedSince DESC",
+			query: "START me=node:Users(uid={uid}) MATCH me-[r:OWNS]->t  WITH t AS thing, r.since AS ownedSince MATCH photo<-[?:IN]-thing WITH thing, ownedSince, photo.path AS path, photo.url AS photo MATCH tag<-[?:IS]-thing WITH thing.visibility AS visibility, thing.tid AS tid, COLLECT(tag.tagName) AS tags, path, ownedSince, photo RETURN tid, tags, photo, path, visibility, ownedSince ORDER BY ownedSince DESC",
 			params: {
 				uid: req.uid,
 				name: req.name
@@ -87,10 +124,10 @@ exports.getThings = function(req, res){
 
 // Gets a user's profile 
 exports.getProfile = function(req, res){
-  request.post(server.get('neo4j'))
+  request.post(server.get('neo4jCypherUrl'))
   	.send({
 			query: 
-				"START me=node:node_auto_index(name={name}) WHERE me.uid={uid} RETURN me.name AS name, me.since AS since",
+				"START me=node(*) WHERE me.uid! ={uid} RETURN me.name AS name, me.since AS since",
 			params: {
 				uid: req.uid,
 				name: req.name
@@ -99,49 +136,125 @@ exports.getProfile = function(req, res){
 		.end(sendJSONResponse.bind(res));
 };
 
-// Creates a new user's profile if it doesn't already exist
-exports.addProfile = function(req, res){
+// Creates a new user's profile by using the neo4j REST API client
+// through the REST API we can add an index to the user
+exports.addProfileREST = function(req, res){
 
-	var now = new Date();
-  request.post(server.get('neo4j'))
-  	.send({
-			query: 
-				"START me=node:node_auto_index(name={name}) WHERE me.uid={uid} WITH COUNT(*) AS exists WHERE exists=0 CREATE (me {name: {name}, since: {since}, uid: {uid}}) RETURN me.name AS name, me.since AS since",
-			params: {
-				uid: req.uid,
-				name: req.name,
-				since: now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() 
+	var db = server.get('neo4j');
+
+	async.waterfall([
+		checkIfUserExists,
+		saveUserNode, 
+		createUserIndex,
+		],
+		sendResponse
+	);
+	
+	// see if user exists and if not then create it
+	function	checkIfUserExists(callback) {
+		db.getIndexedNodes('Users', 'uid', req.uid, function(err, nodes) {
+			if (nodes.length) { 
+				res.send(nodes[0].data); // stop waterfall and send back already existing user
 			}
-		})
-		.end(sendJSONResponse.bind(res));
+			else {
+				callback(err);
+			}
+		});
+	};
+
+	function saveUserNode(callback) {
+		var now = new Date();
+		var since =  now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+		var newUser = db.createNode({uid: req.uid, name: req.name, since: since});
+		newUser.save(callback);
+	};
+
+	function createUserIndex(node, callback) {
+		node.index('Users', 'uid', req.uid, function (err) {
+			callback(err, node.data);
+		});
+	};
+
+	function sendResponse(err, result) {
+		if (err) {
+			res.status(400);
+			res.send(err);
+		}
+		else {
+			res.send(result);
+		}
+	};
 };
 
-exports.addThing = function(req, res){
+exports.addThingREST = function(req, res) {
+	
+	var db = server.get('neo4j');
+	var tid = generateThingsbookID(req.uid);
 
-	var tId = generateThingsbookID(req.uid);
+	async.waterfall([
+		checkIfThingExists,
+		saveThingNode, 
+		createThingIndex,
+		connectThing,
+		],
+		sendResponse
+	);
 
-  request.post(server.get('neo4j'))
-  	.send({
-			query: 
-				"START me=node:node_auto_index(name={name}) WHERE me.uid={uid} CREATE (thing { tId: {tid}, visibility:{vis} }), (photo { url: {url}, path: {path} }), photo-[:PHOTO_OF]->thing, me-[:OWNS { since: {date} }]->thing RETURN thing.tId AS tid",
-			params: {
-				uid: req.uid,
-				tid: tId,
-				name: req.name,
-				vis: req.body.visibility,
-				url: req.body.photo,
-				path: req.body.path,
-				date: req.body.created
-			}
-		})
-		.end(sendJSONResponse.bind(res));
+	function checkIfThingExists(callback) {
+		db.getIndexedNodes('Things', 'tid', tid, function(err, nodes) {
+			if (nodes.length) { var err = 'tID already exists'; }
+			callback(err);
+		});
+	};
+
+	function saveThingNode(callback) {
+		var thing = db.createNode({tid: tid, visibility: req.body.visibility});
+		thing.save(callback);
+	};
+
+	function createThingIndex(node, callback) {
+		node.index('Things', 'tid', node.data.tid, callback);
+	};
+
+	function connectThing(callback) {
+		var query = [
+		'START me=node:Users(uid={uid})',
+		',thing=node:Things(tid={tid})',
+		'CREATE',
+		'(photo { url: {url}, path: {path} })',
+		',photo<-[:IN]-thing,',
+		'me-[:OWNS { since: {date} }]->thing',
+		'RETURN thing.tid AS tid'
+		].join('\n');
+
+		var params = {
+			uid: req.uid,
+			tid: tid,
+			url: req.body.photo,
+			path: req.body.path,
+			vis: req.body.visibility,
+			date: req.body.created
+		};
+
+		db.query(query, params, callback);
+	};
+
+	function sendResponse(err, result)	{
+		if(err) { 
+			res.status(400);
+			res.send(err);
+		}
+		else {
+			res.send(result[0]);
+		}
+	};		
 };
 
 exports.updateThing = function(req, res) {
-	request.post(server.get('neo4j'))
+	request.post(server.get('neo4jCypherUrl'))
   	.send({
 			query: 
-					"START tag=node(*) WHERE tag.tagName! IN {tags} WITH COLLECT(tag.tagName) AS existingTags FOREACH(newTag in filter(oldTag in {tags} WHERE NOT(oldTag in existingTags))  : CREATE (tag{tagName:newTag})) WITH existingTags START thing=node(*), tag=node(*) WHERE thing.tId! = {tid} AND tag.tagName! IN {tags} CREATE UNIQUE thing-[r:IS]->tag return tag",
+					"START tag=node(*) WHERE tag.tagName! IN {tags} WITH COLLECT(tag.tagName) AS existingTags FOREACH(newTag in filter(oldTag in {tags} WHERE NOT(oldTag in existingTags))  : CREATE (tag{tagName:newTag})) WITH existingTags START thing=node:Things(tid={tid}), tag=node(*) WHERE tag.tagName! IN {tags} CREATE UNIQUE thing-[r:IS]->tag return tag",
 			params: {
 				tid: req.params.tid,
 				tags: req.body.tags

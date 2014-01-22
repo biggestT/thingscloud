@@ -17,41 +17,42 @@ define([
 
 		var r = R/5.0;
 
-		var circles = [];
+		var squares = [];
 		var shift = Math.round(Math.random());
 		for (var i = 0; i < n; i++) {
 			var sign = Math.pow(-1, i+shift);
-			circles[i] = [];
+			squares[i] = [];
 			var x = R+sign*Math.random()*(R-1.5*r);
 			var y = (i+1)/n*R*1.5;
-			circles[i].x = x;
-			circles[i].y = y;
+			squares[i].x = x;
+			squares[i].y = y;
 		};
 
 		var lines = [];
 
 		for (var i = 1; i < n; i++) {
 			lines[i-1] = [];
-			lines[i-1].x1 = circles[i-1].x;
-			lines[i-1].y1 = circles[i-1].y;
-			lines[i-1].x2 = circles[i].x;
-			lines[i-1].y2 = circles[i].y;
+			lines[i-1].x1 = squares[i-1].x;
+			lines[i-1].y1 = squares[i-1].y;
+			lines[i-1].x2 = squares[i].x;
+			lines[i-1].y2 = squares[i].y;
 		}	
 
-		var circles = logo.selectAll('circle')
-			.data(circles)
+		var squares = logo.selectAll('rect')
+			.data(squares)
 			.enter()
-			.append('circle');
+			.append('rect');
 
 		var lines = logo.selectAll('line')
 			.data(lines)
 			.enter()
 			.append('line');
 
-		var circlesAttributes = circles
-			.attr('cx', function (d) { return d.x; })
-			.attr('cy', function (d) { return d.y; })
-			.attr('r', r)
+		var squaresAttributes = squares
+			.attr('x', function (d) { return d.x-r; })
+			.attr('y', function (d) { return d.y-r; })
+			.attr('width', 2*r)
+			.attr('height', 2*r)
 			.attr('fill', 'grey')
 
 		var linesAttributes = lines 

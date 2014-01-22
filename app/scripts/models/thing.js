@@ -89,12 +89,15 @@ define([
           //     break;
           case "delete":
             console.log('trying to delete thing');
+            options.data = JSON.stringify(this);
+            options.contentType = 'application/json';
             options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
             break;
           case "update":
               // options.url = "/myService/setUser.aspx";
             options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
             console.log('updating model');
+            console.log(options);
               break;
         }
 

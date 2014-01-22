@@ -127,10 +127,9 @@ define([
 			function whenThingDestroyed(model, response) {
 				Backbone.eventAgg.trigger('message:new', 'succesfully deleted thing with tId:' + response.tid, 'info');
 			};
-			function whenError(error){
-				Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + error, 'danger');
-
-			}
+			function whenError(model, error){
+				Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + error.responseText, 'danger');
+			};
 		}
 
 
