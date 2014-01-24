@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "dependencies": {
     "express": "3.4.x ",
@@ -14,7 +14,7 @@
     "dropbox": "~0.10.2",
     "hashids": "~0.3.2",
     "async": "~0.2.9",
-    "bower": "0.6.x"
+    "bower": "~1.2.8"
   },
   "main": "server.js",
   "devDependencies": {
@@ -33,7 +33,6 @@
     "grunt-contrib-imagemin": "~0.2.0",
     "grunt-contrib-watch": "~0.5.2",
     "grunt-mocha": "~0.4.1",
-    "grunt-bower-requirejs": "~0.7.0",
     "grunt-usemin": "~0.1.10",
     "grunt-requirejs": "~0.4.0",
     "grunt-rev": "~0.1.0",
@@ -50,8 +49,5 @@
   "engines": {
     "node": "0.10.x",
     "npm": "1.2.x"
-  },
-  "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"
   }
 }
