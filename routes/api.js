@@ -25,7 +25,6 @@ function sendJSONResponse (neo4jRes) {
 
 	  // send array if multiple results or just one object if not
 	  parsed = (parsed.length == 1) ?  parsed[0] : parsed;
-	  console.log(neo4jRes.error);
 
 	  this.status(neo4jRes.statusCode);
   	this.send(parsed);
@@ -59,23 +58,6 @@ function generateThingsbookID(uid) {
 	var tid = hash.encrypt(uid, millisecondsPassed);
 
 	return tid;
-}
-
-exports.deleteThing = function (req, res) {
-	console.log(req.params.tid);
-	request.post(server.get('neo4jCypherUrl'))
-  	.send({
-			query: "START  DELETE it, r",
-			params: {
-				uid: req.uid,
-				tid: req.params.tid
-			}
-		})
-		.end(function (neo4jRes) {
-			console.log(neo4jRes.body);
-			console.log(server.get('neo4jCypherUrl'));
-		});
-
 }
 
 exports.deleteThingREST = function (req, res) {

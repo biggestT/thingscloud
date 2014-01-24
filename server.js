@@ -72,7 +72,6 @@ function getUserIdFromDropbox (req, res, next) {
 			}
 			var userInfo = JSON.parse(res.text);
 			// pass the confirmed dropbox uid on with the request objects to be used in the actual CRUD method
-			console.log(userInfo.uid);
 			req.uid = userInfo.uid;
 			req.name = userInfo.display_name;
   		next();
