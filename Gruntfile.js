@@ -318,8 +318,9 @@ module.exports = function (grunt) {
 		'usemin'
 	]);
 
-	
-	grunt.registerTask('heroku', [
+	// for build when deploying to heroku with the custom buildpack:
+	// https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt
+	grunt.registerTask('heroku:production', [
 		'build'
 	]);
 };
