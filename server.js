@@ -12,15 +12,15 @@ var request = require('superagent');
 
 // Neo4j database 
 var neo4j = require('neo4j');
-var localNeo4jURL = 'http://localhost:7474';
-var db = new neo4j.GraphDatabase(localNeo4jURL);
+var neo4jURL = process.env.GRAPHENEDB_URL || 'http://localhost:7474';
+var db = new neo4j.GraphDatabase(neo4jURL);
 
 // global server object
 server = express();
 
 // all environments
 server.set('port', process.env.PORT || 5000);
-server.set('neo4jCypherUrl', (process.env.NEO4J_URL  || localNeo4jURL) + '/db/data/cypher');
+server.set('neo4jCypherUrl', neo4jURL + '/db/data/cypher');
 server.set('neo4j', db);
 server.use(express.favicon());
 server.use(express.logger('dev'));
