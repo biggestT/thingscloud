@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 		app: 'app',
 		dist: 'dist'
 	};
-
+	require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
 	grunt.initConfig({
 		yeoman: yeomanConfig,
 		// for updating git repository on build
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
     bower: {
     	install: {
     		options: {
-    			targetDir: './<%= yeoman.dist %>/bower_components'
+    			targetDir: '<%= yeoman.dist %>/bower_components'
     		}
     	}
     },
@@ -236,11 +236,6 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
-		// bower: {
-		// 	all: {
-		// 		rjsConfig: '<%= yeoman.app %>/scripts/main.js'
-		// 	}
-		// },
 		jst: {
 			options: {
 				amd: true
