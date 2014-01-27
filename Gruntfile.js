@@ -266,9 +266,6 @@ module.exports = function (grunt) {
 		}
 	});
 
-	// grunt.loadNpmTasks('grunt-shell');
-	grunt.loadNpmTasks('clean:dist');
-
 	grunt.registerTask('createDefaultTemplate', function () {
 		grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');
 	});
@@ -320,7 +317,7 @@ module.exports = function (grunt) {
 
 	// for build when deploying to heroku with the custom buildpack:
 	// https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt
-	grunt.registerTask('heroku:production', [
+	grunt.registerTask('heroku', [
 		'build'
 	]);
 };
