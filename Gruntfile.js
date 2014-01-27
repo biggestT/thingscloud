@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 		app: 'app',
 		dist: 'dist'
 	};
-	require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
+
 	grunt.initConfig({
 		yeoman: yeomanConfig,
 		// for updating git repository on build
@@ -309,10 +309,11 @@ module.exports = function (grunt) {
 		'rev',
 		'usemin'
 	]);
-
-	// for build when deploying to heroku with the custom buildpack:
-	// https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt
+	
 	grunt.registerTask('heroku', [
-		'build'
+		'build',
+		'shell:git-add-dist',
+		'shell:git-commit-build',
+		'shell:heroku-push'
 	]);
 };
