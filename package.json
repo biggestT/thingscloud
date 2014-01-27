@@ -2,21 +2,14 @@
   "name": "thingscloud",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"
-  },
   "dependencies": {
     "express": "3.4.x ",
     "jade": "*",
     "superagent": "*",
     "neo4j": "~0.2.20",
-    "dbox": "0.6.1",
-    "dropbox": "~0.10.2",
     "hashids": "~0.3.2",
-    "async": "~0.2.9",
-    "bower": "~1.2.8"
+    "async": "~0.2.9"
   },
-  "main": "server.js",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.0",
@@ -44,8 +37,10 @@
     "grunt-config": "~0.1.4",
     "grunt-replace": "~0.5.1",
     "grunt-env": "~0.4.1",
-    "grunt-shell": "~0.6.1"
+    "grunt-shell": "~0.6.1",
+    "grunt-bower-task": "~0.3.4"
   },
+  "main": "server.js",
   "engines": {
     "node": "0.10.x",
     "npm": "1.2.x"

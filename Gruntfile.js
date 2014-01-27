@@ -39,6 +39,13 @@ module.exports = function (grunt) {
       	command: 'git push heroku master'
       }
     },
+    bower: {
+    	install: {
+    		options: {
+    			targetDir: './<%= yeoman.dist %>/bower_components'
+    		}
+    	}
+    },
 		watch: {
 			options: {
 				nospawn: true,
@@ -229,11 +236,11 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
-		bower: {
-			all: {
-				rjsConfig: '<%= yeoman.app %>/scripts/main.js'
-			}
-		},
+		// bower: {
+		// 	all: {
+		// 		rjsConfig: '<%= yeoman.app %>/scripts/main.js'
+		// 	}
+		// },
 		jst: {
 			options: {
 				amd: true
@@ -259,7 +266,8 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-shell');
+	// grunt.loadNpmTasks('grunt-shell');
+	grunt.loadNpmTasks('clean:dist');
 
 	grunt.registerTask('createDefaultTemplate', function () {
 		grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');
@@ -294,6 +302,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('build', [
 		'clean:dist',
+		'bower',
 		'createDefaultTemplate',
 		'jst',
 		'compass:dist',
@@ -311,14 +320,6 @@ module.exports = function (grunt) {
 
 	
 	grunt.registerTask('heroku', [
-		'build',
-		'shell:git-add-dist',
-		'shell:git-commit-build',
-		'shell:heroku-push'
+		'build'
 	]);
-
-	// grunt.registerTask('default', [
-	// 	'jshint',
-	// 	'build'
-	// ]);
 };

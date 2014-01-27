@@ -7,7 +7,7 @@ CREATE (root),(tor { name:'tor' }),(emil { name:'emil' }),(alexander { name:'ale
 
 (photo1 { mediumPhoto:'https://photos-3.dropbox.com/t/0/AACg7uN8QDZwOzAIV39VL8FZ1Fmad2JSfdeUyduFi5AF0g/12/113599483/jpeg/200x200/1/_/0/4/IMG_20130727_122036.jpg/ljtg1shwk4cca4v/AwUmJ-qUnc/IMG_20130727_122036.jpg'}), 
 (photo2 { mediumPhoto:'https://photos-3.dropbox.com/t/0/AABucp9ZOW1d0BJ1bvh1EIDrKsqCo-eY_C7qTViNAtmq0Q/12/113599483/jpeg/200x200/1/_/0/4/IMG_20130727_121945.jpg/no07wumhqmylgv0/G44MjYtmkF/IMG_20130727_121945.jpg'}), 
-(photo3 { mediumPhoto:'https://photos-2.dropbox.com/t/0/AABLCVXbh8-FbFJW8XvvZXWKnqNAX5OB7C3tb_La2XU4zg/12/113599483/jpeg/200x200/1/_/0/4/IMG_20130727_121845.jpg/ol6mcoebteoc6dh/pv2Zo7lBDF/IMG_20130727_121845.jpg'}),
+(photo3 { mediumPhoto:'https://photos-2.dropbox.com/t/0/AABLCVXbh8-FbFJW8XvvZXWKnqNAX5OB7C3tb_La2XU4zg/12/113599483/jpeg/200x200/1/_/0/4/IMG_20130727_121845.jpg/ol6mcoebteoc6dh/pv2Zo7lBDF/IMG_20130 727_121845.jpg'}),
 
 
 (thing3 { visibility:'private' }), 
@@ -147,7 +147,4 @@ thing-[r:IS]->tag
 return tag
 
 
-START tag=node(*)
-MATCH tag<-[r:IS]-()
-DELETE rag, r
-WHERE has(tag.tagName)
+match me-[:OWNS]->t where t.tId="LYjJ02hDEg8g1" and me.uid=113599483 return t.tId;
