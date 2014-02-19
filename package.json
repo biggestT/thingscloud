@@ -6,7 +6,7 @@
     "express": "3.4.x ",
     "jade": "*",
     "superagent": "*",
-    "neo4j": "~0.2.20",
+    "neo4j": "~1.0",
     "hashids": "~0.3.2",
     "async": "~0.2.9"
   },

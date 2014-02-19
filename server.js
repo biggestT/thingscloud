@@ -13,7 +13,9 @@ var request = require('superagent');
 // Neo4j database 
 var neo4j = require('neo4j');
 var neo4jURL = process.env.GRAPHENEDB_URL || 'http://localhost:7474';
+console.log(neo4jURL);
 var db = new neo4j.GraphDatabase(neo4jURL);
+
 
 // global server object
 server = express();
@@ -84,10 +86,10 @@ function getUserIdFromDropbox (req, res, next) {
 // server.get('/users', users.list);
 
 // Get a user's profile
-server.get('/api/:name', api.getProfile);
+server.get('/api/:name', api.getProfileREST);
 // server.get('/:tid', api.getThing);
 // Lists the things belonging to a user
-server.get('/api/:name/things', api.getThings);
+server.get('/api/:name/things', api.getThingsREST);
 
 // Set up POST routes
 server.delete('/api/:tid', api.deleteThingREST)
@@ -97,7 +99,7 @@ server.post('/api/:name', api.addProfileREST);
 server.post('/api/:name/things', api.addThingREST);
 
 // Set up PUT routes
-server.put('/api/:tid', api.updateThing);
+server.put('/api/:tid', api.updateThingREST);
 
 http.createServer(server).listen(server.get('port'), function(){
   console.log('Express server listening on '  + server.get('port'));

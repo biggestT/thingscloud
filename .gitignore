@@ -21,3 +21,6 @@ logs
 results
 
 npm-debug.log
+.timestamp
+bower_components/
+.env
