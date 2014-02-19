@@ -15,7 +15,12 @@ function sendResponse(err, result)	{
 		this.send(err);
 	}
 	else {
-		this.send(result[0]);
+		if (result.length > 1) {
+			this.send(result);
+		}
+		else {
+			this.send(result[0]);
+		}
 	}
 };		
 
@@ -56,11 +61,9 @@ exports.deleteThingREST = function (req, res) {
 	'START t=node:Things(tid={tid})',
 	'MATCH (t)-[r]-()',
 	'WITH t, r',
-	'OPTIONAL MATCH (t)-[r1]->(n)',
-	'OPTIONAL MATCH (n)-[r2]-(o)',
-	'WHERE o IS NULL AND ID(o) <> ID(t)',
-	'WITH t, r, n',
-	'DELETE r, n, t'
+	'MATCH (t)-[r2]->(n)',
+	'WHERE NOT (t)-[r2]->(n)--()',
+	'DELETE t, r, n'
 	].join('\n');
 
 	params = {
