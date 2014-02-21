@@ -233,14 +233,14 @@ exports.addThingREST = function(req, res) {
 
 };
 
-// UPDATE A THING WITH NEW TAGS
+// UPDATE A THING's TAGS
 // --------------------------
 
 exports.updateThingREST = function(req, res) {
 	
-	var db = server.get('neo4j');
+	var dbTransactional = server.get('neo4jTransactional');
 
-	var query = [
+	var createTagsQuery = [
 		'OPTIONAL MATCH (tag)',
 		'WHERE tag.tagName IN {tags}',
 		'WITH COLLECT (tag.tagName) AS existingTags',
@@ -249,22 +249,44 @@ exports.updateThingREST = function(req, res) {
 		'START thing=node:Things(tid={tid}), tag=node(*)',
 		'WHERE tag.tagName IN {tags}',
 		'CREATE UNIQUE thing-[r:IS]->tag return tag'
-		].join('\n');
+	].join('\n');
 
-		var params = {
-			tid: req.params.tid,
-			tags: req.body.tags
-		};
+	var deleteTagsQuery = [
+	'START thing=node:Things(tid={tid})',
+	'MATCH (thing)-[r:IS]->(tag)',
+	'WHERE NOT tag.tagName in {tags}',
+	'WITH thing, tag, r',
+	'OPTIONAL MATCH (thing)-[:IS]->(lonelyTag)',
+	'WHERE NOT (thing)-[:IS]->(lonelyTag)--()',
+	'DELETE r, lonelyTag'
+	].join('\n');
 
-		db.query(query, params, sendRequestBody);
-
-		function sendRequestBody(err, result) {
-			if (err) { 
-				res.status(400);
-				res.send(err); 
+	var transStatement = {
+		statements: [{
+			statement: deleteTagsQuery,
+			parameters: {
+				tid: req.params.tid,
+				tags: req.body.tags
 			}
-			else {
-			res.send(req.body); // to confirm update
+		}, {
+			statement: createTagsQuery,
+			parameters: {
+				tid: req.params.tid,
+				tags: req.body.tags
+			}
+		}]
+	}
+
+	dbTransactional.beginTransaction(transStatement, {commit: true}, sendRequestBody);
+		
+	function sendRequestBody(err, result) {
+		if (err) { 
+			res.status(400);
+			res.send(err); 
 		}
-		}; 
+		else {
+		res.send(req.body); // to confirm update
+	}
+}
 };
+

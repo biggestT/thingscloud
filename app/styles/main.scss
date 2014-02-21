@@ -121,9 +121,21 @@ a, .fa {
 		a.thumbnail:hover {
 			border-color: $foregroundColor;
 		}
+		.hidden:hover {
+			display: inline;
+		}
+		.tag:hover {
+			.options-icon {
+				display:inline;
+				margin-left: 4px;
+				&:hover {
+					color: rgb(214, 214, 214);
+				}
+			}
+		}
 	}
 
-	.options-container {
+	.options-container, .options-icon {
 		display: none;
 	}
 

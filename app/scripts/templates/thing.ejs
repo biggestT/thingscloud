@@ -2,14 +2,14 @@
 	<div class="col-lg-3 col-md-4 col-sm-6">
 			<a class="object thumbnail thing-thumbnail" style="background-image: url(<%= photo %>);">
 				<div class="row">
-					<div class="btn-group col-lg-10">
+					<div class="tags btn-group col-lg-10">
 					<% for(var i=0; i<tags.length; i++) { %>
-				      <button class="btn"><%= tags[i] %></button>
+				      <button class="tag btn"><%= tags[i] %><i class="options-icon delete-tag fa fa-times" data-tagname="<%= tags[i] %>"></i></button>
 					<% } %>
 					</div>
 					<div class="options-container col-md-2">
 				  		<div class="btn-group">
-				  			<button type="button" class="btn delete"><i class="fa fa-times">
+				  			<button type="button" class="btn delete-thing"><i class="fa fa-times">
 								</i></button>
 				  		</div>
 				  </div>

@@ -19,7 +19,8 @@ define([
     template: JST['app/scripts/templates/thing.ejs'],
 
     events: {
-    	'click .delete': 'clear',
+    	'click .delete-thing': 'deleteThing',
+    	'click .delete-tag': 'deleteTag',
     	'click .add-tags': 'addTags',
     	'keydown input' : 'updateOnEnter'
     },
@@ -34,12 +35,6 @@ define([
 			// this.listenTo(this.model, 'change:photo', waitForImage);
 			this.listenTo(this.model, 'change:processing', this.render);
 			this.listenTo(this.model, 'change:tags', this.render);
-
-			// this.$img = $('<img>', { 
-			// 	src: this.model.getPhoto().url,
-			// 	class: 'thing not-selected' 
-			// }); 
-
 			
 
 		},
@@ -63,7 +58,7 @@ define([
 			return this;	
 		},
 
-		// SHOW OR HIDE OPTIONS MENU
+		// SHOW OR HIDE THING OPTIONS MENU
 		showOptions: function (){
 			if(!this.model.isProcessing()) {
 				this.$options.show();
@@ -87,19 +82,6 @@ define([
 			this.$newTagInput.focus();
 		},
 
-		close: function () {
-			// var trimmedValue = this.$input.val().trim();
-			// this.$input.val(trimmedValue);
-
-			// if (trimmedValue) {
-			// 	this.model.save({ title: trimmedValue });
-			// } else {
-			// 	this.clear();
-			// }
-
-			// this.$el.removeClass('editing');
-		},
-
 		updateOnEnter: function (e) {
 			if (e.which === ENTER_KEY) {
 				var trimmedTag = this.$newTagInput.val().trim();
@@ -118,7 +100,7 @@ define([
 				this.addTags();
 			}
 		},
-		clear: function () {
+		deleteThing: function () {
 			this.model.destroy({
 				success: whenThingDestroyed.bind(this),
 				error: whenError,
@@ -130,8 +112,20 @@ define([
 			function whenError(model, error){
 				Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + error.responseText, 'danger');
 			};
-		}
+		},
 
+		deleteTag: function (event) {
+			console.log(event.target.dataset.tagname);
+			
+			var tag = event.target.dataset.tagname;
+			var tagsCopy = this.model.get('tags').slice();
+			var index = tagsCopy.indexOf(tag);
+			
+			tagsCopy.splice(index, 1);
+
+			this.model.save({tags: tagsCopy });
+			
+		}
 
   });
 

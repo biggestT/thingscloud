@@ -12,9 +12,12 @@ var request = require('superagent');
 
 // Neo4j database 
 var neo4j = require('neo4j');
+var neo4jTransactional = require('node2neo');
+
 var neo4jURL = process.env.GRAPHENEDB_URL || 'http://test:NtZGJE4S8L1Gb5R4A6MT@test.sb01.stations.graphenedb.com:24789';
-console.log(neo4jURL);
+
 var db = new neo4j.GraphDatabase(neo4jURL);
+var dbTransactional = neo4jTransactional(neo4jURL);
 
 
 // global server object
@@ -24,6 +27,7 @@ server = express();
 server.set('port', process.env.PORT || 5000);
 server.set('neo4jCypherUrl', neo4jURL + '/db/data/cypher');
 server.set('neo4j', db);
+server.set('neo4jTransactional', dbTransactional);
 server.use(express.favicon());
 server.use(express.logger('dev'));
 server.use(express.bodyParser());
