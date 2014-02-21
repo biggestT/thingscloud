@@ -285,7 +285,7 @@ exports.updateThingREST = function(req, res) {
 			res.send(err); 
 		}
 		else {
-		res.send(req.body); // to confirm update
+		res.send(req.body); // send back request to confirm update
 	}
 }
 };

@@ -88,43 +88,28 @@ define([
 				this.$newTagInput.val(trimmedTag);
 
 				if (trimmedTag) {
-					var oldTags = this.model.get('tags').slice();
-					var newTags = [];
-					newTags.push(trimmedTag);
-		
-					this.model.save({ tags: newTags.concat(oldTags) });
-					
+					this.model.get('tags').push(trimmedTag);
+					this.model.trigger('change:tags');
 				} else {
 					this.$newTag.hide();
 				}
 				this.addTags();
 			}
 		},
+
 		deleteThing: function () {
-			this.model.destroy({
-				success: whenThingDestroyed.bind(this),
-				error: whenError,
-				wait: true
-			});
-			function whenThingDestroyed(model, response) {
-				Backbone.eventAgg.trigger('message:new', 'succesfully deleted thing with tId:' + response.tid, 'info');
-			};
-			function whenError(model, error){
-				Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + error.responseText, 'danger');
-			};
+			this.model.destroy();
 		},
 
 		deleteTag: function (event) {
 			console.log(event.target.dataset.tagname);
 			
 			var tag = event.target.dataset.tagname;
-			var tagsCopy = this.model.get('tags').slice();
-			var index = tagsCopy.indexOf(tag);
-			
-			tagsCopy.splice(index, 1);
+			var tags = this.model.get('tags');
 
-			this.model.save({tags: tagsCopy });
-			
+			var index = tags.indexOf(tag);
+			tags.splice(index, 1);
+			this.model.trigger('change:tags');
 		}
 
   });

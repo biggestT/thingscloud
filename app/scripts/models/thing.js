@@ -22,8 +22,7 @@ define([
     idAttribute: 'tid',
 
     initialize: function () {
-
-
+      this.on('change:tags', this.save);
     },
 
     // PHOTO GET/SET
@@ -42,7 +41,6 @@ define([
     },
     setNewPhoto: function (url, dbPath) {
 
-      console.log('waiting for new image');
       this._loadingPhotoPath = dbPath;
 
       // create new dummy jQuery object to tell us when the new image has finished loading
@@ -64,9 +62,6 @@ define([
     },
 
     addTag: function () {
-      // var newTags = this.get('tags');
-      // var newTag = 'new tag';
-      // newTags.push(newTag);
       this.set({
         tags: ['new tag']
       });
@@ -80,31 +75,56 @@ define([
 
        // passing options.url will override 
        // the default construction of the url in Backbone.sync
+      options.wait = true;
 
         switch (method) {
+
           case "create":
+            options.success = onCreationSuccess.bind(this);
+            options.error = onCreationFail;
             return this.collection.sync.call(model, method, model, options);
-          // case "read":
-          //     options.url = "/myservice/getUser.aspx?id="+model.get("id");
-          //     break;
+
           case "delete":
-            console.log('trying to delete thing');
             options.data = JSON.stringify(this);
             options.contentType = 'application/json';
             options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
+            options.success = onDeleteSuccess.bind(this);
+            options.error = onDeleteFail;
             break;
+
           case "update":
-              // options.url = "/myService/setUser.aspx";
             options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
-            console.log('updating model');
-            console.log(options);
-              break;
+            options.success = onUpdateSuccess;
+            options.error = onUpdateFail;
+            break;
         }
 
-        if (options.url) {
-          return Backbone.sync.call(model, method, model, options);
+        // if (options.url) {
+        return Backbone.sync.call(model, method, model, options);
+        // }
+
+        function onCreationSuccess (model, response) {
+          Backbone.eventAgg.trigger('message:new', 'succesfully created thing with tId:' + model.tid, 'info');
+          this.setProcessing('false');
         }
-    }
+        function onCreationFail (response) {
+          Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
+        }
+        function onUpdateSuccess (model, response) {
+          Backbone.eventAgg.trigger('message:new', 'updated thing with tid:' + model.tid, 'info');
+        }
+        function onUpdateFail (response) {
+          Backbone.eventAgg.trigger('message:new', 'could not update thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
+        }
+        function onDeleteSuccess (model, response) {
+          Backbone.eventAgg.trigger('message:new', 'Thing with tid: ' + model.tid + ' successfully deleted', 'info');
+        }
+        function onDeleteFail (response) {
+          Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
+        }
+
+    },
+
 
     
     

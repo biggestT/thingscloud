@@ -169,21 +169,17 @@
 					
 					// save the thing to the server with the new photo even though it hasn't been loaded for
 					// client display yet
-					thing.save({photo: url}, {
-						success: whenThingReady.bind(thing),
-						error: savingFailed,
-						wait: true
-					});
+					thing.save({photo: url});
 
-					function whenThingReady (model, response) {
-						Backbone.eventAgg.trigger('message:new', 'thing saved to server with tid: ' + response.tid, 'success');
-						this.setProcessing(false);
-						callback();
-					}
-					function savingFailed (model, error) {
-						Backbone.eventAgg.trigger('message:new', 'thing could not be saved to server: ' + error, 'danger');
-						model.destroy();
-					}
+					// function whenThingReady (model, response) {
+					// 	Backbone.eventAgg.trigger('message:new', 'thing saved to server with tid: ' + response.tid, 'success');
+					// 	this.setProcessing(false);
+					// 	callback();
+					// }
+					// function savingFailed (model, error) {
+					// 	Backbone.eventAgg.trigger('message:new', 'thing could not be saved to server: ' + error, 'danger');
+					// 	model.destroy();
+					// }
 				}
 			}
 
