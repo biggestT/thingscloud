@@ -9,7 +9,7 @@ $foregroundColor: gray;
 
 $thumbnailHeight: 260px;
 
-$previewHeight: 130px;
+$previewHeight: 80px;
 
 
 /* text variables */
@@ -95,7 +95,7 @@ a, .fa {
 	#add {
 
 		.photo-list {
-			height: 2*$previewHeight;
+			height: 3*$previewHeight;
 			overflow-y: scroll;
 		}
 

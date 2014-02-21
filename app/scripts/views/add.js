@@ -99,14 +99,16 @@
 					var isPhoto = fileName.match(/^.*\.jpg$/);
 					return (isPhoto && isNotAlreadyListed);
 				});
-				// console.log(this.rootFolder);
+				
 				var thumbnailUrls = db.getThumbnailURLs(root, photoFileList);
 				// Put all listed models in an array and then add them all to the collection
 
 				var tempPhotos = [];
-				for (var i in thumbnailUrls) {
+
+				var n = thumbnailUrls.length;
+				while(n--) {
 					var tempPhoto = new Photo();
-					tempPhoto.setPhoto(thumbnailUrls[i], photoFileList[i]);
+					tempPhoto.setPhoto(thumbnailUrls[n], photoFileList[n]);
 					tempPhotos.push(tempPhoto);
 				}
 				potentialUploads.add(tempPhotos);

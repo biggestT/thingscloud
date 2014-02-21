@@ -5,5 +5,6 @@
 * 2014-01-21 tried indexing through the neo4j node js client 6 hrs 8 min
 * 2014-01-22 finally fixed deletion and indexing by using the REST API 5 hrs 39 min
 * 2014-01-27 continued heroku integration 5 hrs 29 min
+* 2014-02-19 deployed working version to heroku. 4 hrs 54 min
 
-### Total time spent: 24 hours and 39 minutes 
+### Total time spent: 29 hours and 33 minutes 

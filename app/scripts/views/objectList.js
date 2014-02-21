@@ -43,7 +43,8 @@ define([
       });
       
       this._childViews.push(childView);
-      if (this._rendered) $(this.el).prepend(childView.render().el);
+      if (this._rendered) $(this.el).append(childView.render().el);
+      // if (this._rendered) this.el.appendChild(childView.render().el);
     },
    
     remove : function(model) {
@@ -59,7 +60,7 @@ define([
    
       $(this.el).empty();
       _(this._childViews).each(function(childView) {
-        $(that.el).prepend(childView.render().el);
+        $(that.el).append(childView.render().el);
       });
    
       return this;
