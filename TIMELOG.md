@@ -6,5 +6,6 @@
 * 2014-01-22 finally fixed deletion and indexing by using the REST API 5 hrs 39 min
 * 2014-01-27 continued heroku integration 5 hrs 29 min
 * 2014-02-19 deployed working version to heroku. 4 hrs 54 min
+* 2014-02-21 tags removal and improved error messages 8 hrs 31 min
 
-### Total time spent: 29 hours and 33 minutes 
+### Total time spent: 38 hours and 4 minutes 

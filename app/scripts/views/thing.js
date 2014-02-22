@@ -35,8 +35,7 @@ define([
 			// this.listenTo(this.model, 'change:photo', waitForImage);
 			this.listenTo(this.model, 'change:processing', this.render);
 			this.listenTo(this.model, 'change:tags', this.render);
-			
-
+			this.listenTo(this.model, 'change:all', this.render);
 		},
 
 		render: function () {
@@ -74,7 +73,9 @@ define([
       this.model.setSelected(selected);
       this.$selected.toggle();
     },
+
 		edit: function () {
+
 		},
 
 		addTags: function () {
@@ -84,12 +85,23 @@ define([
 
 		updateOnEnter: function (e) {
 			if (e.which === ENTER_KEY) {
-				var trimmedTag = this.$newTagInput.val().trim();
-				this.$newTagInput.val(trimmedTag);
+				var trimmedString = this.$newTagInput.val().trim();
+				this.$newTagInput.val(trimmedString);
 
-				if (trimmedTag) {
-					this.model.get('tags').push(trimmedTag);
+				if (trimmedString) {
+					var newTags = trimmedString.split(' ');
+					var oldTags = this.model.get('tags');
+					for (var i in newTags) {
+						oldTags.push(newTags[i]);
+					}
 					this.model.trigger('change:tags');
+					// var oldTags = this.model.get('tags');
+					// // this.model.set('tags', oldTags.concat(newTags));
+					// this.model.save({
+					// 	tags: oldTags.concat(newTags)
+					// })
+
+	
 				} else {
 					this.$newTag.hide();
 				}

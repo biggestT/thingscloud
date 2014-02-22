@@ -22,7 +22,7 @@ define([
     idAttribute: 'tid',
 
     initialize: function () {
-      this.on('change:tags', this.save);
+      this.on('change:tags', this.save.bind(this));
     },
 
     // PHOTO GET/SET
@@ -39,7 +39,7 @@ define([
         'path': dbPath
       });
     },
-    setNewPhoto: function (url, dbPath) {
+    setNewPhoto: function ( url, dbPath) {
 
       this._loadingPhotoPath = dbPath;
 
@@ -51,12 +51,11 @@ define([
       img.load(changeToNewPhoto.bind(this));
         
       function changeToNewPhoto () {
-        console.log('changing to new photo inside thing model');
+  
         this.set({
           'photo': url,
           'path': dbPath
         });
-        
       };
 
     },
@@ -76,6 +75,7 @@ define([
        // passing options.url will override 
        // the default construction of the url in Backbone.sync
       options.wait = true;
+      this.setProcessing(true);
 
         switch (method) {
 
@@ -94,7 +94,7 @@ define([
 
           case "update":
             options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
-            options.success = onUpdateSuccess;
+            options.success = onUpdateSuccess.bind(this);
             options.error = onUpdateFail;
             break;
         }
@@ -105,18 +105,21 @@ define([
 
         function onCreationSuccess (model, response) {
           Backbone.eventAgg.trigger('message:new', 'succesfully created thing with tId:' + model.tid, 'info');
-          this.setProcessing('false');
+          this.setProcessing(false);
         }
         function onCreationFail (response) {
           Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
         }
         function onUpdateSuccess (model, response) {
           Backbone.eventAgg.trigger('message:new', 'updated thing with tid:' + model.tid, 'info');
+          this.setProcessing(false);
         }
         function onUpdateFail (response) {
           Backbone.eventAgg.trigger('message:new', 'could not update thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
         }
         function onDeleteSuccess (model, response) {
+          this.trigger('destroy');
+          this.collection.remove(this);
           Backbone.eventAgg.trigger('message:new', 'Thing with tid: ' + model.tid + ' successfully deleted', 'info');
         }
         function onDeleteFail (response) {

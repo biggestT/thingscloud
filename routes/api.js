@@ -256,8 +256,8 @@ exports.updateThingREST = function(req, res) {
 	'MATCH (thing)-[r:IS]->(tag)',
 	'WHERE NOT tag.tagName in {tags}',
 	'WITH thing, tag, r',
-	'OPTIONAL MATCH (thing)-[:IS]->(lonelyTag)',
-	'WHERE NOT (thing)-[:IS]->(lonelyTag)--()',
+	'OPTIONAL MATCH (thing)-[r:IS]->(lonelyTag)',
+	'WHERE NOT (thing)-[r:IS]->(lonelyTag)--()',
 	'DELETE r, lonelyTag'
 	].join('\n');
 
@@ -282,6 +282,7 @@ exports.updateThingREST = function(req, res) {
 	function sendRequestBody(err, result) {
 		if (err) { 
 			res.status(400);
+			console.log(err);
 			res.send(err); 
 		}
 		else {
