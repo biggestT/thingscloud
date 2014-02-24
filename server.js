@@ -70,7 +70,7 @@ function getUserIdFromDropbox (req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
 
 	request
-		.get('https://api.dropbox.com/1/account/info' + '?access_token=' + req.query.access_token)
+		.get('https://api.dropbox.com/1/account/info' + '?access_token=' + req.header('Access-Token'))
 		.end( function(error, res) {
 			if (error) {
 				res.status(401); // unathorized!
@@ -97,6 +97,8 @@ server.get('/api/:name/things', api.getThingsREST);
 
 // Set up POST routes
 server.delete('/api/:tid', api.deleteThingREST)
+server.delete('/api/:name/things/:tid', api.deleteThingREST)
+
 // Add a new user
 server.post('/api/:name', api.addProfileREST);
 // Add a thing to a user
@@ -104,6 +106,7 @@ server.post('/api/:name/things', api.addThingREST);
 
 // Set up PUT routes
 server.put('/api/:tid', api.updateThingREST);
+server.put('/api/:name/things/:tid', api.updateThingREST);
 
 http.createServer(server).listen(server.get('port'), function(){
   console.log('Express server listening on '  + server.get('port'));

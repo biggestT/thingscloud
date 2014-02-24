@@ -34,8 +34,8 @@ define([
 			// Wait for image a changed image element to be loaded before re-rendering the view
 			// this.listenTo(this.model, 'change:photo', waitForImage);
 			this.listenTo(this.model, 'change:processing', this.render);
+			this.listenTo(this.model, 'change:photo', this.render);
 			this.listenTo(this.model, 'change:tags', this.render);
-			this.listenTo(this.model, 'change:all', this.render);
 		},
 
 		render: function () {
@@ -74,10 +74,6 @@ define([
       this.$selected.toggle();
     },
 
-		edit: function () {
-
-		},
-
 		addTags: function () {
 			this.$newTag.show();
 			this.$newTagInput.focus();
@@ -95,13 +91,6 @@ define([
 						oldTags.push(newTags[i]);
 					}
 					this.model.trigger('change:tags');
-					// var oldTags = this.model.get('tags');
-					// // this.model.set('tags', oldTags.concat(newTags));
-					// this.model.save({
-					// 	tags: oldTags.concat(newTags)
-					// })
-
-	
 				} else {
 					this.$newTag.hide();
 				}

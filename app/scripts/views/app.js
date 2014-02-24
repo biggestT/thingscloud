@@ -35,6 +35,7 @@ define([
 			// Bind global app variables to the Backbone object that is included in all classes
 			Backbone.eventAgg = new Backbone.Model();
 			Backbone.serverURL = './api/';
+			Backbone.appFolder = 'thingsbook/images/'; // name of the dropbox folder where thingsbook store its lowers images
 
 			var appMessages = new MessageCollection({
 				eventAggregator: Backbone.eventAgg
@@ -45,20 +46,8 @@ define([
 				el: '#message-box'
 			});
 
-			window.setTimeout(checkConnectionToServer, 5000);
+			// window.setTimeout(checkConnectionToServer, 5000);
 
-			function checkConnectionToServer () {
-				// $.ajax('Backbone.ServerURL', {
-				//   statusCode: {
-				//     404: function() {
-				//       alert('Not working');
-				//     },
-				//     200: function() {
-				//       alert('Working');
-				//     }
-			 //  	}	
-			 //  });
-			};
 			// app.eventAgg = new 
 			var logo = new LogoView({
 				el: $('#logoContainer')
@@ -66,6 +55,20 @@ define([
 			
 			// Dropbox wrapper-model for communicating with the dropbox.js library
 			var db = new Dropbox();
+			// attach a single dropbox client instance to 
+			// something that all the applications classes can use
+			Backbone.db = db; 
+
+			// set the Oauth token as default parameter in all further ajax requests
+			$(document).ajaxSend(function(event, request) {
+				var token = db.getOauthToken();
+				if (token) {
+					request.data = {
+						'access_token': token
+					}
+					request.setRequestHeader('Access-Token', token);
+				}
+			});
 
 			var messageLog = new MessageModel();
 

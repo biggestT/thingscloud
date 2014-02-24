@@ -19,7 +19,7 @@ define([
     
     url:  function() {
       if( this._meta['user'] && this._meta['token']) {
-    		return Backbone.serverURL + this._meta['user'] + '/things' + '?access_token=' + this._meta['token'];
+    		return Backbone.serverURL + this._meta['user'] + '/things';
       }
       else {
       	console.error('no username and oAuthToken set for uploading to server ');

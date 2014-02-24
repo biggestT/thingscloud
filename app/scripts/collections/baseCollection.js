@@ -17,7 +17,6 @@ define([
       function updateModelsCollection ( baseModel ) {
         baseModel.collection = this;
       }
-      
     },
 
     meta: function (prop, value) {

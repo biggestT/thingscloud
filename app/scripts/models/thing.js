@@ -22,10 +22,13 @@ define([
     idAttribute: 'tid',
 
     initialize: function () {
-      this.on('change:tags', this.save.bind(this));
+      this.on('change:tags',function(){ this.save(); });
+      // this.on('change:photo', this.save.bind(this));
+      this.on('request', function () { this.setProcessing(true); })
+      this.on('sync', function () { this.setProcessing(false); })
     },
 
-    // PHOTO GET/SET
+    // PHOTO GET/SET/DELETE
 
     getPhoto: function () {
       return {'url': this.get('photo'), 'path': this.get('path')};
@@ -38,6 +41,10 @@ define([
         'photo': url,
         'path': dbPath
       });
+    },
+    deletePhoto: function () {
+      var photo = this.getPhoto();
+      Backbone.db.deleteFile(Backbone.appFolder + photo['path']);
     },
     setNewPhoto: function ( url, dbPath) {
 
@@ -60,72 +67,76 @@ define([
 
     },
 
-    addTag: function () {
-      this.set({
-        tags: ['new tag']
-      });
+    // override fetch
+    fetch: function(options) {
+      options || (options = {});
+      options.success = onFetchSuccess;
+      // options.error = onFetchError;
+      // call backbone default fetch
+      
+      function onFetchSuccess (resp, status, xhr) {
+        Backbone.eventAgg.trigger('message:new', 'succesfully fetched thing with id:' + resp.tid, 'info');
+      }
+
+      Backbone.Model.prototype.fetch.call(this, options);
+    },
+    save: function(attrs, options) {
+      options || (options = {});
+      options.success =  (this.isNew()) ? onCreationSuccess : onUpdateSuccess;
+      options.error =  (this.isNew()) ? onCreationError : onUpdateError;
+        
+
+      function onUpdateSuccess (model, resp, opt) {
+        // console.log(resp);
+        // console.log(status);
+        // console.log(xhr);
+        Backbone.eventAgg.trigger('message:new', 'updated thing with tid:' + resp.tid, 'info');
+      }
+      function onCreationSuccess (model, resp, opt) {
+        Backbone.eventAgg.trigger('message:new', 'created a new thing with tid:' + resp.tid, 'success');
+      }
+      function onCreationError (resp) {
+        Backbone.eventAgg.trigger('message:new', 'error creating thing:' + JSON.parse(response.responseText[0]['code']), 'danger');
+      }
+      function onUpdateError (resp) {
+        Backbone.eventAgg.trigger('message:new', 'error updating thing:' + JSON.parse(response.responseText[0]['code']) , 'danger');
+      }
+
+      Backbone.Model.prototype.save.call(this, attrs, options);
+    },
+    destroy: function (options) {
+      options || (options = {});
+      options.success = onDestroySuccess;
+      options.error = onDestroyError;
+
+      function onDestroySuccess (model, resp, options) {
+        model.deletePhoto();
+        Backbone.eventAgg.trigger('message:new', 'thing with tid:' + resp.tid + ' deleted' , 'info');
+      }
+      function onDestroyError (model, resp, options) {
+        Backbone.eventAgg.trigger('message:new', 'Error deleting thing' + resp.tid , 'danger');
+      }
+      Backbone.Model.prototype.destroy.call(this, options);
     },
 
     // FUNCTIONS FOR COMMUNICATING WITH THE SERVER
-
     sync: function(method, model, options) {
 
-      options || (options = {});
+      
+      options || (options = {} );
 
-       // passing options.url will override 
-       // the default construction of the url in Backbone.sync
       options.wait = true;
-      this.setProcessing(true);
 
         switch (method) {
-
-          case "create":
-            options.success = onCreationSuccess.bind(this);
-            options.error = onCreationFail;
-            return this.collection.sync.call(model, method, model, options);
 
           case "delete":
             options.data = JSON.stringify(this);
             options.contentType = 'application/json';
-            options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
-            options.success = onDeleteSuccess.bind(this);
-            options.error = onDeleteFail;
             break;
 
-          case "update":
-            options.url = Backbone.serverURL + this.id  + '?access_token=' + this.collection._meta['token'];
-            options.success = onUpdateSuccess.bind(this);
-            options.error = onUpdateFail;
-            break;
         }
 
-        // if (options.url) {
         return Backbone.sync.call(model, method, model, options);
-        // }
-
-        function onCreationSuccess (model, response) {
-          Backbone.eventAgg.trigger('message:new', 'succesfully created thing with tId:' + model.tid, 'info');
-          this.setProcessing(false);
-        }
-        function onCreationFail (response) {
-          Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
-        }
-        function onUpdateSuccess (model, response) {
-          Backbone.eventAgg.trigger('message:new', 'updated thing with tid:' + model.tid, 'info');
-          this.setProcessing(false);
-        }
-        function onUpdateFail (response) {
-          Backbone.eventAgg.trigger('message:new', 'could not update thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
-        }
-        function onDeleteSuccess (model, response) {
-          this.trigger('destroy');
-          this.collection.remove(this);
-          Backbone.eventAgg.trigger('message:new', 'Thing with tid: ' + model.tid + ' successfully deleted', 'info');
-        }
-        function onDeleteFail (response) {
-          Backbone.eventAgg.trigger('message:new', 'could not delete thing! Error:' + JSON.parse(response.responseText)[0]['code'], 'danger');
-        }
-
     },
 
 

@@ -7,5 +7,6 @@
 * 2014-01-27 continued heroku integration 5 hrs 29 min
 * 2014-02-19 deployed working version to heroku. 4 hrs 54 min
 * 2014-02-21 tags removal and improved error messages 8 hrs 31 min
+* 2014-02-24 improved sync methods that better utilizes default backbone methods 7 hrs 50 min
 
-### Total time spent: 38 hours and 4 minutes 
+### Total time spent: 45 hours and 54 minutes 

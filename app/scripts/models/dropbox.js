@@ -8,6 +8,15 @@ define([
     'use strict';
 
 
+    // Show responses from the Dropbox API
+    function onDropBoxResponse (err, filestat) {
+    	if (err) {
+    		Backbone.eventAgg.trigger('message:new', 'Dropbox error:' + err.responseText, 'danger');
+    	}
+    	else {
+    		Backbone.eventAgg.trigger('message:new', 'Dropbox created/deleted/modified:' + filestat.path, 'info');
+    	}
+    }
     // Wrapper for the dropbox.js API interface
     // contains a single dropbox client instance 
 
@@ -29,6 +38,10 @@ define([
 				console.log('initalizing db model');
 				this.login();
 	    },
+	   
+	    deleteFile: function(path) {
+	    	this._client.remove(path, onDropBoxResponse);
+	    },
 	    login: function () {
 	    	this._client.authenticate( function (error, client) {
 					if (error) {return console.error(error);}
@@ -36,6 +49,7 @@ define([
 					this._client = client;
 					this.set({ authenticated: true });
 
+					
 				}.bind(this));
 	    },
 	    getOauthToken: function () {
@@ -80,11 +94,11 @@ define([
 				function moveFileToThingsbook (error, blob, fileStat) {
 					if(error){ return console.error(error); }
 					var newFilePath = fileStat.path.replace(/.*\//, '');
-					client.writeFile('thingsbook/images/' + newFilePath , blob, getPublicURL);
+					client.writeFile(Backbone.appFolder + newFilePath , blob, getPublicURL);
 				}
 
 				function getPublicURL (error, fileStat) {
-					if(error){ return console.error(error); }
+					onDropBoxResponse(error, fileStat);
 					client.makeUrl(fileStat.path, { download: true , downloadHack: true }, returnURL)
 				}
 
