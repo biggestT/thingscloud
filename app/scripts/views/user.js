@@ -51,9 +51,8 @@ define([
 					this.$('.things-list').empty();
 					this.$('.things-list').append(this._myThingsView.render().el);
 
-					
-
-				} else {
+				} 
+				else {
 					$(this.el).empty();
 					html = this.template(this.model.toJSON());
 					$(this.el).append(html);

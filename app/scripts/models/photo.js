@@ -18,7 +18,6 @@ define([
 			path: '/',
 			selected: false
 		}),
-		
 
 		initialize: function () {
 			this.defaults = _.extend({}, this.Events, this.events);
@@ -26,15 +25,15 @@ define([
 		},
 
 		// PHOTO GET/SET
-    getPhoto: function () {
-      return {'url': this.get('url'), 'path': this.get('path')};
-    },
-    setPhoto: function (url, dbPath) {
-      this.set({
-        'url': url,
-        'path': dbPath
-      })
-    }
+		getPhoto: function () {
+			return {'url': this.get('url'), 'path': this.get('path')};
+		},
+		setPhoto: function (url, dbPath) {
+			this.set({
+				'url': url,
+				'path': dbPath
+			})
+		}
 
 		
 	});

@@ -22,13 +22,20 @@ define([
     idAttribute: 'tid',
 
     initialize: function () {
+
+      // make sure tags array is a new one
+      if (this.isNew()) this.set('tags', []); // not sure why this is needed
+      
       this.on('change:tags',function(){ this.save(); });
-      // this.on('change:photo', this.save.bind(this));
+
       this.on('request', function () { this.setProcessing(true); })
       this.on('sync', function () { this.setProcessing(false); })
+
+      BaseModel.prototype.initialize.call(this, arguments);
     },
 
-    // PHOTO GET/SET/DELETE
+    // PHOTO GET/SET/DELETE METHODS
+    // --------------------------
 
     getPhoto: function () {
       return {'url': this.get('photo'), 'path': this.get('path')};
@@ -53,7 +60,6 @@ define([
       // create new dummy jQuery object to tell us when the new image has finished loading
       var img = $('<img>', { src: url }); 
 
-      // async.parallel()
       // once image is loaded it will be added to the model
       img.load(changeToNewPhoto.bind(this));
         
@@ -67,7 +73,9 @@ define([
 
     },
 
-    // override fetch
+    // CUSTOMIZED SYNC METHODS 
+    // -------------------
+
     fetch: function(options) {
       options || (options = {});
       options.success = onFetchSuccess;
@@ -80,6 +88,7 @@ define([
 
       Backbone.Model.prototype.fetch.call(this, options);
     },
+
     save: function(attrs, options) {
       options || (options = {});
       options.success =  (this.isNew()) ? onCreationSuccess : onUpdateSuccess;
@@ -87,9 +96,6 @@ define([
         
 
       function onUpdateSuccess (model, resp, opt) {
-        // console.log(resp);
-        // console.log(status);
-        // console.log(xhr);
         Backbone.eventAgg.trigger('message:new', 'updated thing with tid:' + resp.tid, 'info');
       }
       function onCreationSuccess (model, resp, opt) {
@@ -104,6 +110,7 @@ define([
 
       Backbone.Model.prototype.save.call(this, attrs, options);
     },
+
     destroy: function (options) {
       options || (options = {});
       options.success = onDestroySuccess;
@@ -119,10 +126,9 @@ define([
       Backbone.Model.prototype.destroy.call(this, options);
     },
 
-    // FUNCTIONS FOR COMMUNICATING WITH THE SERVER
+    // SET OPTIONS COMMON FOR ALL SERVER SYNCRONISATION CALLS
     sync: function(method, model, options) {
 
-      
       options || (options = {} );
 
       options.wait = true;
@@ -137,7 +143,7 @@ define([
         }
 
         return Backbone.sync.call(model, method, model, options);
-    },
+    }
 
 
     

@@ -18,7 +18,7 @@ define([
     },
     
     url:  function() {
-      if( this._meta['user'] && this._meta['token']) {
+      if( this._meta['user'] ) {
     		return Backbone.serverURL + this._meta['user'] + '/things';
       }
       else {

@@ -33,18 +33,14 @@ define([
 		},
 
 		url: function () {
-			return Backbone.serverURL + this._nameConcat + '?access_token=' + this._oAuthToken;
+			return Backbone.serverURL + this._nameConcat;
 		},
 
 		getThings: function () {
 			var things = this.get('things');
 			if (things) {
 				things.meta('user', this.get('name'));
-				things.fetch({
-				  success: function () {
-						console.log(JSON.stringify(this.get('things')));
-				  }.bind(this)
-				});
+				things.fetch();
 			}
 		},
 
@@ -67,8 +63,6 @@ define([
 
 					var db = this.get('dropbox');
 
-					var token = db.getOauthToken();
-
 					db.getAccountInfo(function (userInfo) {
 
 						// Format the dropbox username to fit into an URL
@@ -82,7 +76,6 @@ define([
 						})
 						// set private variables that are used in the url to call the thingsbook API
 						this._nameConcat = nameConcat;
-						this._oAuthToken = token;
 
 						// UGLY FIX!!!
 						this.save();
@@ -91,7 +84,6 @@ define([
 						
 						// Set the user's thingscollection to connect to the right thingbook API-URL
 						this.get('things').meta('user', nameConcat);
-						this.get('things').meta('token', token);
 						this.get('things').fetch();
 
 					}.bind(this));

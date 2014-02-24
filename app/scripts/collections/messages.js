@@ -25,8 +25,6 @@ define([
       this._fadeTime = 250;
       this.listenTo(options.eventAggregator, 'message:new', this.addMessage);
 
-      // this.on('add', this.addMessage);
-      // this.on('remove', this.removeMessage);
     },
 
     getFadeTime: function () {

@@ -165,6 +165,7 @@
 
 					thing.setNewPhoto(url, photoPath);
 					thing.save({photo: url});
+					callback();
 				}
 			}
 

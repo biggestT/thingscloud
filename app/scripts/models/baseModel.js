@@ -15,6 +15,7 @@ define([
     },
 
     // PROCESSING SET/GET/TOGGLE
+    // ----------
     
     isProcessing: function () {
       return this.get('processing');
@@ -25,7 +26,8 @@ define([
     },
     
     // SELECTED SET/GET/TOGGLE
-
+    // ---------------
+    
     isSelected: function () {
       return this.get('selected');
     },

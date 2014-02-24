@@ -32,10 +32,21 @@ define([
 			Router.initialize();
 			this.render();
 
-			// Bind global app variables to the Backbone object that is included in all classes
-			Backbone.eventAgg = new Backbone.Model();
+
 			Backbone.serverURL = './api/';
 			Backbone.appFolder = 'thingsbook/images/'; // name of the dropbox folder where thingsbook store its lowers images
+		
+			// RANDOMLY GENERATED SVG LOGO
+			//--------
+
+			var logo = new LogoView({
+				el: $('#logoContainer')
+			});
+			
+			// EVENT AGGREGATOR AND ITS VIEW
+			// --------------
+
+			Backbone.eventAgg = new Backbone.Model();
 
 			var appMessages = new MessageCollection({
 				eventAggregator: Backbone.eventAgg
@@ -46,13 +57,17 @@ define([
 				el: '#message-box'
 			});
 
-			// window.setTimeout(checkConnectionToServer, 5000);
+			var messageLog = new MessageModel();
 
-			// app.eventAgg = new 
-			var logo = new LogoView({
-				el: $('#logoContainer')
+			var messageBox = new MessageView({
+				el: this.$('#message-box'),
+				model: messageLog
 			});
+
 			
+			// DROPBOX CLIENT OBJECT INITIALIZATION
+			//-------------
+
 			// Dropbox wrapper-model for communicating with the dropbox.js library
 			var db = new Dropbox();
 			// attach a single dropbox client instance to 
@@ -63,20 +78,13 @@ define([
 			$(document).ajaxSend(function(event, request) {
 				var token = db.getOauthToken();
 				if (token) {
-					request.data = {
-						'access_token': token
-					}
 					request.setRequestHeader('Access-Token', token);
 				}
 			});
 
-			var messageLog = new MessageModel();
+			// THINGSCLOUD USER OBJECT CONTAINING GUI
+			// -------------
 
-			var messageBox = new MessageView({
-				el: this.$('#message-box'),
-				model: messageLog
-			});
-			// Initialize a user of the application
 			var user = new UserModel({
 				dropbox: db
 			});
@@ -87,6 +95,7 @@ define([
 			});
 
 		},
+
 		render: function() {
 			this.$el.html(this.template());
 		}

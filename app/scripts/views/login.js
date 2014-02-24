@@ -10,10 +10,10 @@ define([
 
 	var LoginView = Backbone.View.extend({
 
-			events: {
-				"click .login": "login",
-				"click .signout": "signout"
-			 },
+		events: {
+			"click .login": "login",
+			"click .signout": "signout"
+		},
 
 		template: JST['app/scripts/templates/login.ejs'],
 
