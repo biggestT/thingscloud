@@ -3,9 +3,7 @@
 			<a class="object thumbnail thing-thumbnail" style="background-image: url(<%= photo %>);">
 				<div class="row">
 					<div class="tags btn-group col-lg-10">
-					<% for(var i=0; i<tags.length; i++) { %>
-				      <button class="tag btn"><%= tags[i] %><i class="options-icon delete-tag fa fa-times" data-tagname="<%= tags[i] %>"></i></button>
-					<% } %>
+					<!-- filled by tags template -->
 					</div>
 					<div class="options-container col-md-2">
 				  		<div class="btn-group">
@@ -25,14 +23,9 @@
 				</div>
 			</div>
 
-			<% if (processing) { %>
 			<div class="processing row">
-				<div class="col-md-12">
-					<span class="badge processing center-thing"><i class="fa fa-spin fa-refresh"></i></span>
-				</div>
+				<!-- filled by processing badge template -->
 			</div>
-			<% } %>
-
 				
 			</a>
 </div>

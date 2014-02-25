@@ -17,6 +17,8 @@ define([
   	tagName: 'li',
 
     template: JST['app/scripts/templates/thing.ejs'],
+    templateTags: JST['app/scripts/templates/tags.ejs'],
+    templateProcessing: JST['app/scripts/templates/processing.ejs'],
 
     events: {
     	'click .delete-thing': 'deleteThing',
@@ -33,9 +35,9 @@ define([
 
 			// Wait for image a changed image element to be loaded before re-rendering the view
 			// this.listenTo(this.model, 'change:photo', waitForImage);
-			this.listenTo(this.model, 'change:processing', this.render);
 			this.listenTo(this.model, 'change:photo', this.render);
-			this.listenTo(this.model, 'change:tags', this.render);
+			this.listenTo(this.model, 'change:processing', this.updateProcessing);
+			this.listenTo(this.model, 'change:tags', this.updateTags);
 		},
 
 		render: function () {
@@ -47,14 +49,41 @@ define([
 
 			console.log('rendering thing view');
 			this.$selected = this.$('selected');
-			this.$processing = this.$('.badge.processing');
+			this.$processing = this.$('.processing');
 			this.$options = this.$('div.options-container');
+			this.$tags = this.$('div.tags');
 			this.$newTag = this.$('div.new-tag');
 			this.$newTagInput = this.$('input.new-tag-input');
 			
 			this.delegateEvents();
 
+			this._rendered = true;
+			this.updateTags();
+			this.updateProcessing();
+
 			return this;	
+		},
+
+		updateTags: function () {
+
+			if (!this._rendered) this.render();
+
+			// Update tags
+			this.$tags.empty();
+			var html = this.templateTags({tags: this.model.get('tags')});
+			this.$tags.append(html);
+			
+		},
+		updateProcessing: function () {
+			
+			if (!this._rendered) this.render();
+
+			// show processing badge if model is processing
+			this.$processing.empty();
+			if (this.model.isProcessing()) {
+				var html = this.templateProcessing();
+				this.$processing.append(html);
+			}
 		},
 
 		// SHOW OR HIDE THING OPTIONS MENU
@@ -85,12 +114,13 @@ define([
 				this.$newTagInput.val(trimmedString);
 
 				if (trimmedString) {
-					var newTags = trimmedString.split(' ');
+					var newTags = trimmedString.split(', ');
 					var oldTags = this.model.get('tags');
 					for (var i in newTags) {
 						oldTags.push(newTags[i]);
 					}
 					this.model.trigger('change:tags');
+					this.$newTagInput.val('');
 				} else {
 					this.$newTag.hide();
 				}

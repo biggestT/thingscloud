@@ -23,7 +23,7 @@ define([
 
     initialize: function () {
 
-      // make sure tags array is a new one
+      // make sure tags array is empty if its a new thing
       if (this.isNew()) this.set('tags', []); // not sure why this is needed
       
       this.on('change:tags',function(){ this.save(); });
