@@ -133,8 +133,7 @@ define([
 		},
 
 		deleteTag: function (event) {
-			console.log(event.target.dataset.tagname);
-			
+					
 			var tag = event.target.dataset.tagname;
 			var tags = this.model.get('tags');
 

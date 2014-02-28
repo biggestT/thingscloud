@@ -19,7 +19,6 @@ var neo4jURL = process.env.GRAPHENEDB_URL || 'http://test:NtZGJE4S8L1Gb5R4A6MT@t
 var db = new neo4j.GraphDatabase(neo4jURL);
 var dbTransactional = neo4jTransactional(neo4jURL);
 
-
 // global server object
 server = express();
 
@@ -34,8 +33,9 @@ server.use(express.bodyParser());
 server.use(express.methodOverride());
 server.use(server.router);
 
-// server.use(express.static(path.join(__dirname, 'public')));
 
+// DEVELOPMENT / PRODUCTION DIFFERENCES
+// -------------------
 
 // development only where we skip CORS protection
 if ('development' == server.get('env')) {
@@ -49,6 +49,7 @@ if ('development' == server.get('env')) {
 	});
 	console.log('starting in development mode');
 }
+// production mode that uses packaged javascript file for the client
 else if ('production' == server.get('env')) {
 	server.use(express.static(__dirname + '/dist'));
 	server.all('*', function(req, res, next) {
@@ -57,45 +58,66 @@ else if ('production' == server.get('env')) {
 	console.log('starting in production mode');
 }
 
+// MIDDLEWARE FOR AUTHENTICATION OF REQUESTS
+// ---------------
+
 // always pass requests through authentication pipeline
 // where we ask the Dropbox Core API for the UID corresponding
 // to the access_token retrieved from the thingsbook client
-server.get('/api/*', getUserIdFromDropbox);
-server.post('/api/*', getUserIdFromDropbox);
-server.delete('/api/*', getUserIdFromDropbox);
+server.get('/api/*', dropboxAuthentication);
 
-function getUserIdFromDropbox (req, res, next) {
+// post and delete requests should always be authenticated first
+server.post('/api/*', dropboxAuthentication);
+server.delete('/api/*', dropboxAuthentication);
+
+function dropboxAuthentication (req, res, next) {
 	
 	// Set all response headers to json type
 	res.setHeader('Content-Type', 'application/json');
 
-	request
+	var token = req.header('Access-Token');
+
+	// If the request tries to be authenticated
+	if (token) {
+		request
 		.get('https://api.dropbox.com/1/account/info' + '?access_token=' + req.header('Access-Token'))
 		.end( function(error, res) {
 			if (error) {
-				res.status(401); // unathorized!
+				// unathorized authentication attempt!
+				res.status(401); 
 				res.send(error);
-			}
-			var userInfo = JSON.parse(res.text);
+			}	
+			else {
+				var userInfo = JSON.parse(res.text);
 			// pass the confirmed dropbox uid on with the request objects to be used in the actual CRUD method
+			req.authenticated = true;
 			req.uid = userInfo.uid;
 			req.name = userInfo.display_name;
-  		next();
+			next();
+			}
 		})
-};
-// Set up GET routes
+	}
 
-// server.get('/', routes.index);
-// Lists all the users
-// server.get('/users', users.list);
+	// if the request doesn't try to be authenticated
+	else {
+		req.authenticated = false;
+		next();
+	}
+
+};
+
+// READ ROUTES
+// --------
 
 // Get a user's profile
 server.get('/api/:name', api.getProfileREST);
-// server.get('/:tid', api.getThing);
+
 // Lists the things belonging to a user
 server.get('/api/:name/things', api.getThingsREST);
 
-// Set up POST routes
+// CREATE, UPDATE and DELETE ROUTES
+// ------------------
+
 server.delete('/api/:tid', api.deleteThingREST)
 server.delete('/api/:name/things/:tid', api.deleteThingREST)
 
@@ -104,9 +126,13 @@ server.post('/api/:name', api.addProfileREST);
 // Add a thing to a user
 server.post('/api/:name/things', api.addThingREST);
 
-// Set up PUT routes
+// Update existing things
 server.put('/api/:tid', api.updateThingREST);
 server.put('/api/:name/things/:tid', api.updateThingREST);
+
+
+// KICK OF THE SERVER!
+// -----------
 
 http.createServer(server).listen(server.get('port'), function(){
   console.log('Express server listening on '  + server.get('port'));

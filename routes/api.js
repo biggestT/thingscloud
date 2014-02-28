@@ -82,33 +82,55 @@ exports.deleteThingREST = function (req, res) {
 	})
 }
 
-// GET A THING AND ITS RELATED DATA
+// GET A USER'S THINGS AND ITS RELATED DATA
 // ------------------------------
 
 exports.getThingsREST = function(req, res){
 
 	var db = server.get('neo4j');
 
+	var indexLookup = (req.uid) ? '(uid={id})' : '(name={id})'; 
+
 	var query = [
-		'START me=node:Users(uid={uid})',
-		'MATCH me-[r:OWNS]->t',
-		'WITH t AS thing, r.since AS ownedSince',
-		'OPTIONAL MATCH photo<-[:IN]-thing',
-		'WITH thing, ownedSince, photo.path AS path, photo.url AS photo',
-		'OPTIONAL MATCH tag<-[:IS]-thing',
-		'WITH thing.visibility AS visibility, thing.tid AS tid,',
-		'COLLECT(tag.tagName) AS tags, path, ownedSince, photo',
-		'RETURN tid, tags, photo, path, visibility, ownedSince',
-		'ORDER BY ownedSince DESC'
-		].join('\n');
+	'START me=node:Users', indexLookup,
+	'MATCH me-[r:OWNS]->t',
+	'WHERE t.visibility = {visibility} OR t.visibility = "public"',
+	'WITH t AS thing, r.since AS ownedSince',
+	'OPTIONAL MATCH photo<-[:IN]-thing',
+	'WITH thing, ownedSince, photo.path AS path, photo.url AS photo',
+	'OPTIONAL MATCH tag<-[:IS]-thing',
+	'WITH thing.visibility AS visibility, thing.tid AS tid,',
+	'COLLECT(tag.tagName) AS tags, path, ownedSince, photo',
+	'RETURN tid, tags, photo, path, visibility, ownedSince',
+	'ORDER BY ownedSince DESC'
+	].join('\n');
 
-		var params = {
-			uid: req.uid
-		};
+	var params = {};
 
-		db.query(query, params, sendResponse.bind(res));
+	params.id = req.uid || req.params.name;
+	params.visibility = (req.authenticated) ? 'private' : 'public';
+	
+	db.query(query, params, sendResponse.bind(res));
 };
 
+// GET A USERS PROFILE AND THINGS
+// -------------------
+// exports.getUser = function(req, res) {
+
+// 	var query = [
+// 	'START me=node:Users(name={name})',
+// 	'MATCH me-[r:OWNS]->t',
+// 	'WHERE t.visibility = {visibility} OR t.visibility = "public"',
+// 	'WITH t AS thing, r.since AS ownedSince',
+// 	'OPTIONAL MATCH photo<-[:IN]-thing',
+// 	'WITH thing, ownedSince, photo.path AS path, photo.url AS photo',
+// 	'OPTIONAL MATCH tag<-[:IS]-thing',
+// 	'WITH thing.visibility AS visibility, thing.tid AS tid,',
+// 	'COLLECT(tag.tagName) AS tags, path, ownedSince, photo',
+// 	'RETURN tid, tags, photo, path, visibility, ownedSince',
+// 	'ORDER BY ownedSince DESC'
+// 	].join('\n');
+// };
 
 // GET A USERS PROFILE DATA
 // -------------------
@@ -117,8 +139,10 @@ exports.getProfileREST = function(req, res) {
 
 	var db = server.get('neo4j');
 
+	var queryStart = 'START me=node:Users(uid={uid})';
+
 	var query = [
-		'START me=node:Users(uid={uid})',
+		queryStart,
 		'RETURN me.name AS name, me.since AS since'
 		].join('\n');
 
@@ -138,10 +162,14 @@ exports.addProfileREST = function(req, res){
 
 	var db = server.get('neo4j');
 
+	var nameConcat = req.name.toLowerCase().replace(/\s/g, '-');
+	console.log(nameConcat);
+
 	async.waterfall([
 		checkIfUserExists,
 		saveUserNode, 
-		createUserIndex,
+		createUserIdIndex,
+		createUserNameIndex,
 		],
 		sendResponse.bind(res)
 	);
@@ -167,8 +195,14 @@ exports.addProfileREST = function(req, res){
 		newUser.save(callback);
 	};
 
-	function createUserIndex(node, callback) {
+	function createUserIdIndex(node, callback) {
 		node.index('Users', 'uid', req.uid, function (err) {
+			callback(err, node);
+		});
+	};
+
+	function createUserNameIndex(node, callback) {
+		node.index('Users', 'name', nameConcat, function (err) {
 			callback(err, node.data);
 		});
 	};

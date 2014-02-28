@@ -14,7 +14,7 @@ define([
     defaults: _.extend({},BaseModel.prototype.defaults, {
     	tags: [],
       photo: null,
-      visibility: 'private',
+      visibility: 'public',
       created: '2013-01-28',
       path: null
     }),
